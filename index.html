@@ -4,22 +4,19 @@
     <title>Title</title>
     <meta charset="utf-8">
     <style>
-      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-
-      body { font-family: 'Droid Serif'; }
-      h1, h2, h3 {
-        font-family: 'Yanone Kaffeesatz';
-        font-weight: normal;
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 32pt;
+        padding: 0px 0.5em;
       }
-      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line { font-size: 22pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
     </style>
   </head>
   <body>
-    <textarea id="source">
-
-class: center, middle
+<textarea id="source">
 
 みなさんこんにちは。
 
@@ -37,16 +34,234 @@ Subtitle: Tuple (Value Tuple)
 
 ---
 
+で、この Tuple がですね、実は個人的に好きな機能だったりするので、ここでちょっと紹介してみようかなと思いました。
+
+この、C# の Tuple、とは、いわゆる無名構造体みたいな物です。
+
+名前を付けずに即席で使える struct の一種、と考えると分かりやすいかもしれません。
+
+---
+
+class: middle
+
 ```csharp
 (float Power, int Count) attack = (3.5f, 8);
 life -= attack.Power * attack.Count;
 ```
 
-    </textarea>
+---
+
+いちばん基本的なかたちは、こんな感じになりますね。
+
+カッコ、型、カンマ、型、と並べて、タプルの型を定義できます。
+
+値も同様に、カッコ、値、カンマ、値、と並べて作ります。
+
+そして、このタプルを、タプルに代入、という感じですね。
+
+---
+
+要素を参照するときは、添字じゃなくて、Item1 とか Item2 とかいうようにメンバ名を使います。
+
+左から順に Item1, 2, 3, 4, 5... と、自動的に名前が付けられます。
+
+ただ実際には、こういう Item ほにゃららっていうデフォルトの名前を使うことは、あんまり無いと思います。
+
+---
+
+class: middle
+
+```csharp
+(float Power, int Count) attack = (3.5f, 8);
+life -= attack.Power * attack.Count;
+```
+
+---
+
+こういう風に、型を作るときに Power とか Count とか、明示的に名前を与えることができるようになっています。
+
+値を取り出す時には、ここで付けた名前を使うことができます。
+
+まあやっぱり、ちゃんと意味のある名前を付けた方が分かりやすいですね。
+
+---
+
+class: middle
+
+```csharp
+var attack = (Power: 3.5f, Count: 8);
+life -= attack.Power * attack.Count;
+```
+
+---
+
+あるいは、こんな風に値を作るときに名前を付けることもできます。
+
+この辺りはすごく柔軟に作られていますね。
+
+---
+
+class: middle
+
+```csharp
+var (power, count) = (3.5f, 8);
+life -= power * count;
+```
+
+---
+
+または、こんな感じで、代入の右辺は Tuple にしつつ、左辺は個別の変数で、みたいな代入の仕方も可能です。
+
+こういう、値の作り方、受け方に柔軟性があるのが Tuple の魅力ですね。
+
+いろんなシチュエーションに柔軟に対応することができます。
+
+---
+
+こんな風に便利な Tuple なんですが、使用場面としては、例えば、メソッドから複数の値を返したい場合なんかに使えます。
+
+---
+
+class: middle
+
+```csharp
+bool CheckCollision(Vector3 c, float r, out Vector3 point)
+```
+
+---
+
+例えば、こういう自作のコリジョン判定のメソッドがあったとします。
+
+中心座標と半径を与えると、ヒットの有無と、ヒットした場合は接点を返す、みたいなメソッドですね。
+
+このかたちで個人的にイマイチだなーと思うのは、接点を受け取るのに out 引数を使っていることですね。
+
+例えば、このメソッドを呼ぶ側のコードは……
+
+---
+
+class: middle
+
+```csharp
+Vector3 point;
+var hit = CheckCollision(c, r, out point);
+```
+
+---
+
+こんな感じになりますよね。
+
+ここで前もって Vector3 の変数を用意しておかないといけません。
+
+この、まだ使うかどうかも分からない１要素のために、変数を作って、out を付けて渡して……とやるのが、なんともイレギュラーな感じがして、ちょっとなー、と思ってしまうんですよね。
+
+そんなときはですね……
+
+---
+
+class: middle
+
+```csharp
+(bool hit, Vector3 point) CheckCollision(Vector3 c, float r)
+```
+
+---
+
+こうやって Tuple を使えば、結果を全て return 内にまとめることができます。
+
+このメソッドを呼ぶ側のコードは……
+
+---
+
+class: middle
+
+```csharp
+var (hit, point) = CheckCollision(pos, radius);
+```
+
+---
+
+こんな感じで１行でスッキリ書くことができます。
+
+ちなみに例えば、この return の hit だけを使って、実は point の方は使わない、不要ですよーという場合は……
+
+---
+
+class: middle
+
+```csharp
+var (hit, _) = CheckCollision(pos, radius);
+```
+
+---
+
+こうやって discard、アンダースコアを使って、明示的に値を捨てることができます。
+
+この discard も確か C# 7.0 から導入された機能ですね。
+
+これを使うと処理が軽くなるとか、あんまそういうのは無いんですが、こっちの値は使用しないものなんだ、というのをコード上で明確にできます。
+
+可読性を上げる意味で、使える場面では積極的に使うのがいいと思います。
+
+---
+
+こんな感じで便利な Tuple ですが、最後に小ネタを１個紹介したいと思います。
+
+プログラミングに関するクイズとかで、変数の A と B を入れ替える、いわゆるスワップ処理、をどう書いたらいいか、というのがたまに挙げられると思います。
+
+---
+
+class: middle
+
+```csharp
+// Swap a and b
+var temp = a;
+a = b;
+b = temp;
+```
+
+---
+
+まあ普通に書くと、こんな感じで、一旦テンポラリに入れてから、代入して、代入して、という感じになりますよね。
+
+これが実は Tuple を使うと……
+
+---
+
+class: middle
+
+```csharp
+// Swap a and b
+(a, b) = (b, a);
+```
+
+---
+
+こんな感じで代入一発で済んでしまうんですよね。
+
+まあこれ、最適化にちょっと影響を与えうるんで、すべての場面でお勧めできるもんでは無いです。
+
+ただまあ、ゲーム開発やグラフィックス関係のプログラミングをやっていると、値のスワップってちょくちょく出てくるので、そんなときにこれを使うとスッキリ書けて便利だったりします。
+
+小ネタとして覚えておくといいかなと思います。
+
+---
+
+こんな感じで今回は C# の Tuple についてお話ししてきましたが、いかがでしたでしょうか？
+
+このチャンネルでは、こういう純粋な C# プログラミングのトピックを取り上げる機会は少ないんですけど、まあ Unity を使う上で  C# ってのは必ず出てくる要素ですからね。
+
+今後も何かネタが見つかれば紹介していきたいと思います。
+
+</textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
     <script>
-      var slideshow = remark.create();
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
     </script>
   </body>
 </html>
