@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>19 Spline</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 32pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 22pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは、Unity の新機能、スプラインツールです。
+
+---
+
+Unity のスプラインツールは、名前の通りスプラインカーブを編集するためのエディタなんですが、Unity 2022.1 において公式パッケージの一つとして新規追加されました。
+
+このスプラインツールは、以前から標準機能として搭載して欲しいというリクエストが多く寄せられていたんですけどねー。
+
+ようやく公式に提供されることになりました。
+
+---
+
+なにはともあれ、まずはパッケージをインストールしましょうか。
+
+Package Manager から "Splines" を選択してインポートします。
+
+---
+
+スプラインツールを初めて使うという方は、ひとまずこのサンプルプロジェクトをインポートすることをお勧めします。
+
+スプラインを使うとこんな事ができる、というのが分かりやすくまとまっています。
+
+---
+
+出来ること１・スプラインの編集
+
+---
+
+出来ること２・スプラインのメッシュ化
+
+---
+
+出来ること３・スプラインに沿ったオブジェクトの動き
+
+---
+
+出来ること４・スプラインに沿ったオブジェクトの配置
+
+---
+
+スクリプトから使用できる機能も充実している
+- スプラインの評価
+- 近傍点の取得や曲率の算出など
+
+---
+
+スクリプトを書けばもっといろんなことができる
+- 多様なメッシュの生成
+- データの埋め込み（スプラインエディタとの連携）
+
+https://docs.unity3d.com/Packages/com.unity.splines@2.0/manual/index.html
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
