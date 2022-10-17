@@ -21,19 +21,26 @@
 
 class: center, middle
 
-# Title
+みなさんこんにちは。
+
+今回のトピックは、C# の Tuple についてです。
 
 ---
 
-# Agenda
+最近のバージョンの C# には Tuple、あるいは Value Tuple と呼ばれる、便利な機能があります。
 
-1. Introduction
-2. Deep-dive
-3. ...
+Subtitle: Tuple (Value Tuple)
+
+まあ、最近のバージョン、とは言っても、C# 7.0 で追加された機能ですし、Unity で使えるようになってからも結構時間が経っているんで、決して最新の機能ってわけじゃ無いです。
+
+ただ Unity では古いバージョンを敢えて使い続ける場合なんかもあるので、そういうのも考えると、比較的新しい存在と言えるのかもしれないなー、という感じです。
 
 ---
 
-# Introduction
+```
+(float Power, int Count) attack = (3.5f, 8);
+life -= attack.Power * attack.Count;
+```
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
