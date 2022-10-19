@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>20 Gyro</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 32pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 16pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは、Input System を使ったジャイロ入力です。
+
+---
+
+最近、ゲームパッドを使った FPS や TPS のゲームで、いわゆるジャイロ入力に対応しているケースが増えていると思います。
+
+ゲームパッドに内蔵されたジャイロスコープを使って、この傾ける動きを操作系に使う、ってものですね。
+
+これを Unity の Input System で扱うにはどうしたらいいのかな、という疑問が個人的にあったんですが、実際に試しに作ってみたので、ここで紹介してみたいと思います。
+
+同じ疑問を持っていた方の参考になれば幸いです。
+
+---
+
+> B-Roll: DualShock 4
+
+まずは使用するパッドですが、今回はたまたま手元にあった DualShock 4 を使うことにしました。
+
+恐らく他のゲームパッドでも、データの仕様さえ分かれば、同じようなアプローチで対応できると思います。
+
+---
+
+> B-Roll: DualShock 4 with Input Debugger
+
+Unity の Input System は標準で DualShock 4 に対応していますが、残念ながらジャイロ情報の取得には対応していません。
+
+この部分はカスタム拡張で対応する必要があります。
+
+---
+
+> B-Roll: Web page
+
+このカスタム拡張については、既にチャレンジしている先人がいらっしゃったので、参考にさせていただきました。
+
+このアプローチをベースにして、更に深く Input System へインテグレーションさせてみた形になっています。
+
+---
+
+> B-Roll: GitHub
+
+このカスタム拡張は GyroInputTest という GitHub リポジトリに公開しておきました。
+
+概要欄からリンクしておきます。
+
+DualShock 4 を持っている方は、ぜひ試してみてください。
+
+---
+
+このカスタム拡張のコードについて軽く説明しておきましょう。
+
+---
+
+class: middle
+
+```CSharp
+const string LayoutJson = @"{
+  ""name"": ""DualShock4GamepadHIDCustom"",
+  ""extend"": ""DualShock4GamepadHID"",
+  ""controls"": [
+    {""name"":""gyro"", ""format"":""VC3S"", ""offset"":13,
+     ""layout"":""Vector3"", ""processors"":""ScaleVector3(x=-1,y=-1,z=1)""},
+    {""name"":""gyro/x"", ""format"":""SHRT"", ""offset"":0 },
+    {""name"":""gyro/y"", ""format"":""SHRT"", ""offset"":2 },
+    {""name"":""gyro/z"", ""format"":""SHRT"", ""offset"":4 },
+    {""name"":""accel"", ""format"":""VC3S"", ""offset"":19,
+     ""layout"":""Vector3"", ""processors"":""ScaleVector3(x=-1,y=-1,z=1)""},
+    {""name"":""accel/x"", ""format"":""SHRT"", ""offset"":0 },
+    {""name"":""accel/y"", ""format"":""SHRT"", ""offset"":2 },
+    {""name"":""accel/z"", ""format"":""SHRT"", ""offset"":4 }
+  ]}";
+
+InputSystem.RegisterLayoutOverride(LayoutJson);
+```
+
+---
+
+Input System のカスタマイズにはいくつかのアプローチがあるんですが、最も使いやすいのは、JSON で拡張定義を記述してオーバーライド設定する方法だと思います。
+
+この JSON は、この DualShock4GamepadHID っていうオリジナルのデータレイアウトを拡張するよ、って内容のものになっています。
+
+---
+
+そして、データの 13 バイト目から VC3S フォーマット、つまり 16bit short の３次元ベクトルでジャイロデータが入ってますよ、と。
+
+そして X, Y, Z の各要素の定義が続く感じですね。
+
+ついでにスケールを使って軸の方向の違いを補正しています。
+
+ジャイロデータに続いて、アクセレロメーター、加速度センサーの定義も行っていますね。
+
+最後に RegisterLayoutOverride を使って、この JSON を Input System に読み込ませています。
+
+---
+
+> Split Screen: Camera and Input Debugger
+
+拡張されたデータを Input Debugger で確認してみましょう。
+
+こうやってパッドを傾けると、ジャイロに角速度データが来ているのが分かりますね。
+
+単位はよく分からないんですが、静止状態ではほぼゼロで、回転させると値が出てくるので、角速度であることが分かりますね。
+
+X, Y, Z の各軸も確認できます。
+
+---
+
+パッドを動かすと、加速度センサーが反応しているのも分かりますね。
+
+また、こうやって静止状態にすると、重力加速度が加速度ベクトルに表れているのが分かります。
+
+---
+
+まずは、このジャイロデータをそのまま使ってオブジェクトを回転させるサンプルを作ってみましょうか。
+
+---
+
+```CSharp
+Quaternion GyroInputToRotation(in InputAction.CallbackContext ctx)
+{
+    const double GyroToAngle = 16 * 360 / System.Math.PI;
+    var gyro = ctx.ReadValue<Vector3>();
+    var dt = ctx.time - ctx.control.device.lastUpdateTime;
+    return Quaternion.Euler(gyro * (float)(GyroToAngle * dt));
+}
+
+Quaternion _accGyro = Quaternion.identity;
+
+void Start()
+{
+    var action = new InputAction(binding: "<Gamepad>/gyro");
+    action.performed += ctx => _accGyro *= GyroInputToRotation(ctx);
+    action.Enable();
+}
+
+void Update()
+{
+    transform.localRotation = _accGyro * transform.localRotation;
+    _accGyro = Quaternion.identity;
+}
+```
+
+---
+
+最初にあるのは、ジャイロデータを回転量に変換するヘルパー関数です。
+
+まず、ここに謎の定数がありますね。
+
+これはデータ上の数値を角度に変換するための定数です。
+
+ただ、これ適当に勘で決めたので、間違ってるかもしれません。
+
+ジャイロデータの正しい仕様がよく分からなかったので、まあしょうがないです。
+
+正解を知っている方がいたらぜひ教えてください。
+
+---
+
+で、基本的には Update の中でこの値を積分していけばいいんですが、ここでは更に精密さを求めて、performed コールバックの中で積分を行うようにしています。
+
+というのも DualShock 4 は 4ms 感覚でデータを送ってくるので、１フレーム中に何回もデータを受け取ることになるんですよね。
+
+Update の中で値を見ると、取りこぼすデータがかなり出てしまうことになります。
+
+精密さを求める場合は、こうやってコールバックの中でデータを処理するのがいいでしょう。
+
+---
+
+> Split Screen: Camera and Sample
+
+これでパッドの回転が取れるようになりました。
+
+ですが、この段階ではまだいくつか問題があります。
+
+ひとつは、絶対角が取れていない、というか、要するに動きしか取れていなくて、姿勢を取れているわけではないんですよね。
+
+ジャイロから来るデータは角速度、つまり傾きがどれだけ変化したか、という差分の情報だけなので、絶対的な姿勢を推定することはできないんですね。
+
+---
+
+ふたつめの問題はドリフトです。
+
+ジャイロから来るデータには誤差があるので、時間と共に誤差が蓄積されていくという、いわゆるドリフト問題が発生します。
+
+こう傾けて、元に戻しても、元の姿勢に戻らずに、段々ズレていってしまうんですよね。
+
+---
+
+これらの問題を解決するのにカギとなるのが、重力加速度です。
+
+先ほど Input Debugger を見たときに、加速度センサーに重力加速度が出ていますね、という話をしましたが、これがこの６軸センサーの中で唯一絶対の存在として基準になりうる要素なんですね。
+
+そこで、ここではひとまず、加速度センサーには常に重力、つまり鉛直下方向へのベクトルが表れている、という仮定を置いて、補正処理を書いてみたいと思います。
+
+---
+
+class: middle
+
+```csharp
+var rot = transform.localRotation;
+
+rot *= _accGyro;
+_accGyro = Quaternion.identity;
+
+var accel = Gamepad.current?.GetChildControl<Vector3Control>("accel");
+var gravity = accel?.ReadValue() ?? -Vector3.up;
+
+var comp = Quaternion.FromToRotation(rot * gravity, -Vector3.up);
+
+comp.w *= 0.2f / Time.deltaTime;
+comp = comp.normalized;
+
+transform.localRotation = comp * rot;
+```
+
+---
+
+僕の書いた簡単な補正処理はこんな感じです。
+
+まず、先程と同じジャイロの適用処理が最初にあります。
+
+次に加速度センサーを読み取って、これを gravity としています。
+
+一応ヌルチェックしてダメな場合は適当なベクトルを突っ込んでますね。
+
+---
+
+次に FromToRotation 関数を使って補正回転量を求めています。
+
+先ほどの gravity ベクトルに現在の姿勢を適用したら、それは鉛直下方向になるはずなんだけど、そうじゃなかったら、そのベクトルが鉛直下方向になるように回転するクオータニオンを求めなさいよ、と、そういう処理ですね。
+
+で、この補正回転をそのまま適用してしまうと急すぎるというか動きが固くなってしまうので、回転量を弱める処理をここで行っています。
+
+---
+
+これ、ちょっとしたインチキテクニックなんですけど、クオータニオンの w 成分って、回転量が少なくなるほど１に近づいていくので、これを増やしてからノーマライズすることで回転が浅くなるんですよね。
+
+ここでは適当な数値をかけて回転量を浅くしつつも、deltaTime で割ることで経過時間を加味させるという変な処理を行ってます。
+
+数学的にはヘンテコな処理ですが、まあ簡単な記述で任意の回転量をいじくることができるんで便利ですね。
+
+最後に、この補正量を加味した形でトランスフォームを回転させています。
+
+---
+
+> Split Screen: Camera and Sample
+
+こうして出来たサンプルがこれです。
+
+いちおうちゃんと絶対姿勢が取れていて、傾けて、戻せば、ちゃんと戻る。
+
+こう、ぐりぐり動かしても、いちおう元通りに戻ります。
+
+---
+
+まあ、かなり原始的な処理なので、もちろん問題は色々残っています。
+
+例えば、加速度イコール重力という大胆な省略を行っているので、パッドに加速度が加わってる間は補正が怪しくなりますね。
+
+こんな感じで激しく振ると姿勢がひっくりかえっちゃいます。
+
+---
+
+もうひとつの大きな問題は、ヨー角度について補正がなんにも無いというところです。
+
+基準として使ってるのは鉛直下方向だけなので、縦軸回転について補正する方法が何も無いんですよね。
+
+なので、ヨー角は一度ズレてしまうと直す方法がありません。
+
+こうやって静止状態にしても、微妙にドリフトで回転してしまっているのが分かるでしょうか。
+
+---
+
+このヨー角補正については６軸センサーの永遠のテーマというか、ドライバ側で解決することは不可能なので、アプリケーション側で知恵を絞る必要があります。
+
+まあ、プレイヤーは大体正面を向いてプレイしているだろうという前提を置いて、Z+ 方向にゆっくり寄せていくような補正をかけるのがいいんでしょうかね。
+
+スマフォでは地磁気センサーを使うという手もあるのかもしれないですけどね。
+
+まあこの手のゲームパッドでは不可能なので、やっぱり前方向に吸い付きするのが無難ですかね。
+
+---
+
+こんな感じで今回は Unity の Input System でジャイロ入力を扱う、というのをやってみたわけですが、いかがでしたでしょうか。
+
+ジャイロの面白さもありますが、Input System が簡単に拡張できるというのも分かっていただけたのでは無いかと思います。
+
+---
+
+今回はジャイロ入力の受け口を作っただけで、実際の操作系の実装については触れていませんが、もしジャイロを使ってこんな操作システムを作ったら面白いんじゃないか、みたいなアイデアがありましたら、コメント欄に書き込んでみてください。
+
+ジャイロの他にこういうデバイスを繋げてみたら面白いんじゃないか、とか、このデバイスを Input System に繋げるにはどうしたらいいの？みたいなコメントもあったらいいですね。
+
+---
+
+また今回の動画が参考になったという方は高評価やコメントを頂けますと有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
