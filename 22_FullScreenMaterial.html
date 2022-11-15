@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>22 Full Screen Material</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 40pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 16pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは、シェーダーグラフの新機能、フルスクリーン・マテリアルです。
+
+---
+
+Unity 2022.2 では、シェーダーグラフでフルスクリーン・エフェクトを作成するための機能が追加されています。
+
+以前このチャンネルでも、シェーダーグラフを使ってフルスクリーン・エフェクトを作ってみる、というのをやりましたが、このときはまだスクリプトを自分で用意する必要があったんですよね。
+
+---
+
+それが今回、標準の仕組みが用意された事によって、スクリプト不要でフルスクリーン・エフェクトを作れるようになりました。
+
+---
+
+> Desktop
+
+使い方は簡単で、Create メニューから Fullscreen Shader Graph を選択すればアセットを作れます。
+
+あるいは、Fragment ノードの Material を Fullscreen に変更するのでもいけます。
+
+---
+
+> Camera
+
+この機能は URP と HDRP の両方で使えるんですが、ちょっと使い方が異なってくるので、ここから先は順番に説明していきたいと思います。
+
+---
+
+> Desktop
+
+まず URP の場合ですが、Renderer Feature の機能を使って組み込むことになります。
+
+URP の Renderer アセットの中で Add Renderer Feature ボタンを押して、 Full Screen Pass Render を追加します。
+
+---
+
+Pass Material プロパティに、フルスクリーン・マテリアルを設定します。
+
+ここでは、あらかじめ作っておいたモザイクエフェクトのシェーダーグラフがあるので、これのデフォルトマテリアルを入れましょう。
+
+これでエフェクトが適用されました。
+
+---
+
+エフェクトの作り方も簡単に説明しておきます。
+
+とは言っても、カラーとアルファのスロットしかないので、簡単ですね。
+
+---
+
+特定の色で画面を塗ったり、アルファで透過したりできます。
+
+画面から情報を拾ってきたい場合は URP Sample Buffer ノードが使えます。
+
+---
+
+例えば、色を取得するなら、Source として BlitSource を選択します。
+
+Invert Colors で反転すれば、こんな感じになりますね。
+
+---
+
+次に HDRP の場合ですが、Custom Pass を使って組み込む事になります。
+
+適当なゲームオブジェクトに Custom Pass Volume を追加して、Injection Point は Before Post Process にしておきましょうか。
+
+---
+
+Full Screen Custom Pass を追加して、FullScreen Material にモザイクエフェクトのデフォルトマテリアルを入れます。
+
+これでエフェクトが適用されました。
+
+---
+
+エフェクトの作り方は URP とほぼ同じですが、こちらでは HD Scene Color を使って色の情報を拾うことができます。
+
+そのまま使うと、こう白飛びしちゃうんで、たいていの場合はこの Exposure スイッチを入れて、露出量を適用することになると思います。
+
+---
+
+また、HDRP の方には、このフルスクリーン・マテリアルの仕組みを使ったサンプルが用意されています。
+
+パッケージマネージャーのここからインストールできますね。
+
+---
+
+単純に色を拾うだけじゃなくて、HDRP の機能を駆使したサンプルが用意されいますので、HDRP 上でフルスクリーンエフェクトを開発する際は、ぜひ参考にしてください。
+
+---
+
+> Camera
+
+今回はこんな感じで、シェーダーグラフのフルスクリーン・マテリアルについて解説しましたが、いかがでしたでしょうか？
+
+以前もちょっと工夫すれば同じようなことはできたんですが、標準機能としてしっかり実装されたのは、やっぱり便利ですよね。
+
+---
+
+エフェクトの制作に興味のあるアーティストの方々には、ぜひ触れてみて欲しい新機能でした。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
