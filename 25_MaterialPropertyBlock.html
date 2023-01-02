@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>25 Material Property Block</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 30pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは、スクリプトから安全にマテリアルをいじくる仕組み、Material Property Block です。
+
+---
+
+今日紹介する Material Property Block は、マテリアルのプロパティをスクリプトから変更するための仕組みです。
+
+---
+
+- なぜ必要なのか
+- Material を使う場合のコードとデモ
+- 直接 Material を変更することのデメリット
+  - アセットの変更
+  - アセットの派生に伴う負荷とメモリ消費
+- MPB を使う場合のコードとデモ
+- Inspector の表示
+- ２つ以上使用者がいる場合の対処
+- シメ
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
