@@ -10,7 +10,7 @@
         font-size: 50pt;
         padding: 0px 0.5em;
       }
-      .remark-code-line { font-size: 30pt; margin: 0.2em 0px; }
+      .remark-code-line { font-size: 19pt; margin: 0.2em 0px; }
       p { margin: 0.5em 0px; line-height: 120%; }
       code { margin: 0px 2em; }
     </style>
@@ -37,6 +37,122 @@
 - Inspector の表示
 - ２つ以上使用者がいる場合の対処
 - シメ
+
+---
+
+class: middle
+
+```CSharp
+void Update()
+  => GetComponent<Renderer>().material.color = AnimatedColor;
+```
+
+---
+
+Unity のチュートリアルなどでよく目にするのは、このアプローチですよね。
+
+Renderer コンポーネントの material プロパティを経由して color を変更します。
+
+---
+
+この時、自動的に material のクローンが作られて差し替えられる、という処理が走ります。
+
+マテリアルアセットを直接変更してしまうと副作用が大きいため、そのような配慮がされるわけですね。
+
+---
+
+  B Roll - Profiler
+
+ただ、マテリアルのクローンが作られるということは、それだけメモリを消費することになります。
+
+CPU の処理負荷も僅かながら発生しますね。
+
+---
+
+class: middle
+
+```CSharp
+void Update()
+  => GetComponent<Renderer>().sharedMaterial.color = AnimatedColor;
+```
+
+---
+
+これを避けるために sharedMaterial プロパティを使うという手もあります。
+
+---
+
+  Editor - Demo
+
+ただこうすると、複数のオブジェクトでマテリアルを共有している場合に困ります。
+
+また、マテリアルのアセットファイルが直接書き換えられてしまうので、Play モードを終えた後も変更が残ってしまいます。
+
+---
+
+  B Roll - Git on Terminal
+
+バージョン管理を行なっている場合などは特に困りますよね。
+
+---
+
+このように、通常の Material は、インスタンス毎に独立した操作を行いたい場合や、スクリプトから動的に操作を行いたい場合に、使い辛いという欠点があります。
+
+これを克服するのが MaterialPropertyBlock です。
+
+---
+
+MaterialPropertyBlock とはどうやって使うものなのか、まずはコードを見てみましょう。
+
+---
+
+class: middle
+
+```CSharp
+MaterialPropertyBlock _block;
+
+void Start()
+  => _block = new MaterialPropertyBlock();
+
+void Update()
+{
+    _block.SetColor("_BaseColor", AnimatedColor);
+    GetComponent<Renderer>().SetPropertyBlock(_block);
+}
+```
+
+---
+
+MaterialPropertyBlock は Unity Object の継承クラスではなく、普通の C# のマネージドクラスなので、普通に "new" でインスタンスを作ります。
+
+---
+
+MaterialPropertyBlock には SetColor や SetInteger, SetFloat など、Material クラスと同じようなプロパティ設定用のメソッドが用意されています。
+
+ここでは色を変更するために BaseColor プロパティを設定しています。
+
+---
+
+そして最後に、Renderer オブジェクトに対して SetPropertyBlock メソッドを呼び出して、この MaterialPropertyBlock をセットしています。
+
+---
+
+  Figure - Property Override
+
+これによって、Renderer に元々設定されているマテリアルに対して、 BaseColor だけをオーバーライドした状態を作り出すことができます。
+
+---
+
+実行するとこんな感じです。
+
+ちゃんとインスタンス毎に色が変わっていますね。
+
+---
+
+プロファイラで見てみると、右が MaterialPropertyBlock を使ったバージョンですが、Material の数が抑えられているのが分かると思います。
+
+---
+
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
