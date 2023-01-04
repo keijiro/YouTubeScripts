@@ -20,7 +20,7 @@
 
 みなさんこんにちは。
 
-今回のトピックは、スクリプトから安全にマテリアルをいじくる仕組み、Material Property Block です。
+今回のトピックは、スクリプトからマテリアルをいじくる仕組み、 Material Property Block です。
 
 ---
 
@@ -28,15 +28,15 @@
 
 ---
 
-- なぜ必要なのか
-- Material を使う場合のコードとデモ
-- 直接 Material を変更することのデメリット
-  - アセットの変更
-  - アセットの派生に伴う負荷とメモリ消費
-- MPB を使う場合のコードとデモ
-- Inspector の表示
-- ２つ以上使用者がいる場合の対処
-- シメ
+この Material Property Block を使うことによって、マテリアルのインスタンスを増やさずにプロパティを変更することができます。
+
+---
+
+> B-Roll: Sample
+
+なぜこんな仕組みが必要になるのか、サンプルを使って解説しましょう。
+
+まずは普通にマテリアルを直接いじくる例です。
 
 ---
 
@@ -49,19 +49,21 @@ void Update()
 
 ---
 
-Unity のチュートリアルなどでよく目にするのは、このアプローチですよね。
+Unity のチュートリアルなんかでまず目にするのは、このアプローチですよね。
 
-Renderer コンポーネントの material プロパティを経由して color を変更します。
-
----
-
-この時、自動的に material のクローンが作られて差し替えられる、という処理が走ります。
-
-マテリアルアセットを直接変更してしまうと副作用が大きいため、そのような配慮がされるわけですね。
+Renderer コンポーネントの material プロパティを経由して color を変更しています。
 
 ---
 
-  B Roll - Profiler
+みなさんご存知かもしれませんが、この material にアクセスした瞬間、自動的にマテリアルのクローンが作られて、それに差し替えられるようになっています。
+
+---
+
+マテリアルアセットを直接変更してしまうと副作用が大きいため、そのような配慮がなされるわけですね。
+
+---
+
+> B-Roll: Profiler
 
 ただ、マテリアルのクローンが作られるということは、それだけメモリを消費することになります。
 
@@ -82,27 +84,31 @@ void Update()
 
 ---
 
-  Editor - Demo
+> Editor: Demo
 
 ただこうすると、複数のオブジェクトでマテリアルを共有している場合に困ります。
 
-また、マテリアルのアセットファイルが直接書き換えられてしまうので、Play モードを終えた後も変更が残ってしまいます。
+---
+
+それに、マテリアルアセットが直接書き換えられてしまうので、 Play モードを終えた後も変更が残ってしまうという問題があります。
 
 ---
 
-  B Roll - Git on Terminal
+> B-Roll: Git on Terminal
 
-バージョン管理を行なっている場合などは特に困りますよね。
-
----
-
-このように、通常の Material は、インスタンス毎に独立した操作を行いたい場合や、スクリプトから動的に操作を行いたい場合に、使い辛いという欠点があります。
-
-これを克服するのが MaterialPropertyBlock です。
+バージョン管理を行なっている場合は特に困りますよね。
 
 ---
 
-MaterialPropertyBlock とはどうやって使うものなのか、まずはコードを見てみましょう。
+> Back to camera
+
+このように material プロパティを経由するアプローチには色々なデメリットがあります。
+
+これを克服できるのが Material Property Block です。
+
+---
+
+Material Property Block とはどうやって使うものなのか、まずはコードを見てみましょう。
 
 ---
 
@@ -123,23 +129,23 @@ void Update()
 
 ---
 
-MaterialPropertyBlock は Unity Object の継承クラスではなく、普通の C# のマネージドクラスなので、普通に "new" でインスタンスを作ります。
+Material Property Block は Unity Object の継承クラスではなく、普通の C# のマネージドクラスなので、普通に "new" でインスタンスを作ります。
 
 ---
 
-MaterialPropertyBlock には SetColor や SetInteger, SetFloat など、Material クラスと同じようなプロパティ設定用のメソッドが用意されています。
+Material Property Block には SetColor や SetInteger, SetFloat など、 Material クラスと同じようなアクセサメソッドが用意されています。
 
-ここでは色を変更するために BaseColor プロパティを設定しています。
-
----
-
-そして最後に、Renderer オブジェクトに対して SetPropertyBlock メソッドを呼び出して、この MaterialPropertyBlock をセットしています。
+ここでは色を変更するために "_BaseColor" プロパティをセットしています。
 
 ---
 
-  Figure - Property Override
+そして最後に、 Renderer オブジェクトに対して SetPropertyBlock メソッドを呼び出して、この Material Property Block をセットしています。
 
-これによって、Renderer に元々設定されているマテリアルに対して、 BaseColor だけをオーバーライドした状態を作り出すことができます。
+---
+
+> Figure: Property Override
+
+これで、元のマテリアルに対して "_BaseColor" プロパティだけをオーバーライドした状態を作り出すことができます。
 
 ---
 
@@ -149,10 +155,27 @@ MaterialPropertyBlock には SetColor や SetInteger, SetFloat など、Material
 
 ---
 
-プロファイラで見てみると、右が MaterialPropertyBlock を使ったバージョンですが、Material の数が抑えられているのが分かると思います。
+> Desktop: Benchmark
+
+ベンチマークも行ってみましょう。
+
+右が Material Property Block を使ったバージョンですが、マテリアル数が抑えられているのが分かります。
 
 ---
 
+- ２つ以上使用者がいる場合の対処
+
+- SRP Batcher
+
+---
+
+- シメ
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
