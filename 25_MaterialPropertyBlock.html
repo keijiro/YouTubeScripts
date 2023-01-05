@@ -24,19 +24,17 @@
 
 ---
 
-今日紹介する Material Property Block は、マテリアルのプロパティをスクリプトから変更するための仕組みです。
+Material Property Block は、マテリアルのプロパティをスクリプトから一部変更するための仕組みです。
 
----
-
-この Material Property Block を使うことによって、マテリアルのインスタンスを増やさずにプロパティを変更することができます。
+これを使うことによって、マテリアルを増やさずにプロパティをいじくることが可能になります。
 
 ---
 
 > B-Roll: Sample
 
-なぜこんな仕組みが必要になるのか、サンプルを使って解説しましょう。
+サンプルを使って解説します。
 
-まずは普通にマテリアルを直接いじくる例です。
+まずは普通にマテリアルを直接いじくる例を見てみましょう。
 
 ---
 
@@ -49,6 +47,8 @@ void Update()
 
 ---
 
+こんな感じのコードです。
+
 Unity のチュートリアルなんかでまず目にするのは、このアプローチですよね。
 
 Renderer コンポーネントの material プロパティを経由して color を変更しています。
@@ -59,7 +59,9 @@ Renderer コンポーネントの material プロパティを経由して color 
 
 ---
 
-マテリアルアセットを直接変更してしまうと副作用が大きいため、そのような配慮がなされるわけですね。
+> Camera
+
+マテリアルアセットを直接変更してしまうと副作用が大きいので、そのような配慮がなされるわけですね。
 
 ---
 
@@ -67,7 +69,7 @@ Renderer コンポーネントの material プロパティを経由して color 
 
 ただ、マテリアルのクローンが作られるということは、それだけメモリを消費することになります。
 
-CPU の処理負荷も僅かながら発生しますね。
+CPU の処理負荷も発生しますね。
 
 ---
 
@@ -88,6 +90,8 @@ void Update()
 
 ただこうすると、複数のオブジェクトでマテリアルを共有している場合に困ります。
 
+誰か一人の変更が全体に影響を及ぼしてしまいます。
+
 ---
 
 それに、マテリアルアセットが直接書き換えられてしまうので、 Play モードを終えた後も変更が残ってしまうという問題があります。
@@ -100,11 +104,11 @@ void Update()
 
 ---
 
-> Back to camera
+> Camera
 
-このように material プロパティを経由するアプローチには色々なデメリットがあります。
+このように material プロパティを経由するアプローチには様々なデメリットがあります。
 
-これを克服できるのが Material Property Block です。
+これを克服するのが Material Property Block です。
 
 ---
 
@@ -135,11 +139,11 @@ Material Property Block は Unity Object の継承クラスではなく、普通
 
 Material Property Block には SetColor や SetInteger, SetFloat など、 Material クラスと同じようなアクセサメソッドが用意されています。
 
-ここでは色を変更するために "_BaseColor" プロパティをセットしています。
+ここでは色を変更するために "_BaseColor" プロパティをセットしていますね。
 
 ---
 
-そして最後に、 Renderer オブジェクトに対して SetPropertyBlock メソッドを呼び出して、この Material Property Block をセットしています。
+そして最後に、 Renderer コンポーネントに対して SetPropertyBlock メソッドを呼び出して、この Material Property Block をセットしています。
 
 ---
 
@@ -148,6 +152,8 @@ Material Property Block には SetColor や SetInteger, SetFloat など、 Mater
 これで、元のマテリアルに対して "_BaseColor" プロパティだけをオーバーライドした状態を作り出すことができます。
 
 ---
+
+> Desktop: Sample
 
 実行するとこんな感じです。
 
@@ -163,13 +169,53 @@ Material Property Block には SetColor や SetInteger, SetFloat など、 Mater
 
 ---
 
-- ２つ以上使用者がいる場合の対処
+> Camera
 
-- SRP Batcher
+こんな感じで、プログラマにとっては便利な Material Property Block なんですが、使用に際していくつか気をつけるべきポイントがあるので、ちょっと触れておきたいと思います。
 
 ---
 
-- シメ
+ひとつは、２回以上変更を行う場合への対処です。
+
+Material Property Block は排他的に動作するため、１つの Renderer に対して SetPropertyBlock する人が二人以上いると、どちらか一方の変更しか反映されないという問題が発生します。
+
+---
+
+class: middle
+
+```CSharp
+renderer.GetPropertyBlock(_block);
+_block.SetColor("_BaseColor", AnimatedColor);
+renderer.SetPropertyBlock(_block);
+```
+
+---
+
+そういった競合状態を解決するには GetPropertyBlock メソッドが使えます。
+
+プロパティの変更を行う前に、まず前の人が行った変更を get して、それから変更を行い、 set する、という流れにするわけですね。
+
+---
+
+> Camera
+
+もうひとつは SRP Batcher についてです。
+
+---
+
+残念ながら Material Property Block は SRP Batcher に対応していません。
+
+HDRP や URP で SRP Batcher が効果的に働いている場合に Material Property Block を導入すると、速度の低下を招く可能性があります。
+
+---
+
+> Editor
+
+大量のオブジェクトを Material Property Block で扱う場合は、むしろ GPU Instancing に頼った方がいいかもしれませんね。
+
+---
+
+先ほどのベンチマークも Material の GPU Instancing をオンにした状態で計測しました。
 
 ---
 
