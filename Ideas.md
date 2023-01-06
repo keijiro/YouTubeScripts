@@ -1,5 +1,6 @@
 - Shader Build times
   https://blog.unity.com/technology/2021-lts-improvements-to-shader-build-times-and-memory-usage
+  https://forum.unity.com/threads/improvements-to-shader-build-time-and-runtime-memory-usage.1305615/
 
 - Volumetric Material
 - Water System
