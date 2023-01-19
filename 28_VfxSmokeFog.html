@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>28 VFX Smoke/Fog</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 19pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回はトピックは VFX Graph の新機能紹介です。
+
+---
+
+今回は久しぶりに VFX Graph のお話をしたいと思います。
+
+実は VFX Graph には色々新機能が継続的に追加されているんですけど、今回はその中でも、煙やフォグに関係する新機能をいくつか紹介します。
+
+---
+
+まず最初は Unity 2022.2, HDRP 14.0 で追加された、Six-Way Smoke の機能です。
+
+これは、テクスチャの動的なライティングを可能にする技術ですね。
+
+---
+
+こんな感じで、Texture Sheet アニメーションを使ったエフェクトに対して、リアルタイムにライティングを適用することができます。
+
+---
+
+ライティングが適用できるようになったことで、環境に馴染ませることが容易になります。
+
+また、ライティングによる見た目の変化が生じることで、少ない素材からも変化に富んだエフェクトを作ることが可能になります。
+
+---
+
+…というように色々メリットがあるので、最近流行っている手法ですね。
+
+VFX Graph もこれに対応したという感じです。
+
+---
+
+原理はシンプルで、こんな感じで上下左右前後の６方向からのライティングに対する応答を２枚のテクスチャにベイクしています。
+
+この手法は Six-Way Lightmap とか、Six-Point Lighting とか、色んな名前で呼ばれているんですが、VFX Graph では Six-Way Smoke と呼ぶことになりました。
+
+---
+
+使い方は簡単で、HDRP Lit Quad Output の中で、Material Type を Six-Way Lightmap に変更するだけです。
+
+すると、Positive Side と Negative Side の２つのテクスチャを設定できるようになるので、それぞれ対応する素材を設定するだけです。
+
+---
+
+もうひとつ、VFX Graph の Six-Way Smoke には面白い機能が用意されていて、自己発光を表現することができます。
+
+この爆発エフェクトでは、その自己発光の機能を使って爆炎の明るさを表現しています。
+
+---
+
+テクスチャ内のどこが発光しているかという情報は、独立した Emission Map を与えるか、あるいは Negative Side のアルファチャンネルに埋め込むことができます。
+
+Negative Side の Alpha チャンネルは普段使われずに余っているので、ここに自己発光の情報を埋め込んでしまおう、というわけですね。
+
+---
+
+この Six-Way Smoke の機能については、先日 Unity 公式ブログに投稿された記事の中で更に詳しく解説しています。
+
+サンプル素材なども配布していますので、この機能に興味を持って試す際には、ぜひ一度目を通してみてください。
+
+概要欄からリンクしておきます。
+
+---
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
