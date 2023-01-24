@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>29 Mesh Line</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 19pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+今回のトピックは Unity のプラットフォーム・サポートの最新情報です。
+
+---
+
+今回は Unity の機能紹介ではなくて、Unity の各種プラットフォームのサポート状況に関する情報を、ニュース的にお話ししたいと思います。
+
+---
+
+まず最初に触れておきたいのは、OpenGL ES 2.0 についてですね。
+
+今年出る Unity 2023.1 では OpenGL ES 2.0 のサポートが、遂に無くなります。
+
+---
+
+ちょっと時系列を整理しましょう。
+
+---
+
+まず Android における GLES2 のサポートですが、これは Unity 2021.3 LTS が最後の対応バージョンになります。
+
+Unity 2022 では既に非対応になっていました。
+
+https://forum.unity.com/threads/android-gles2-deprecation.1089253/
+
+---
+
+なので、2021 LTS のサポートが終わる今年が境目になるという感じですね。
+
+---
+
+そして、もう一つのプラットフォームである WebGL の方は、Unity 2023.1 において WebGL 1.0 のサポートが打ち切られています。
+
+WebGL 2.0 が最低必須条件になったということですね。
+
+https://forum.unity.com/threads/removing-support-for-gles2-and-webgl1-in-2023-1a.1360090/
+
+---
+
+WebGL 2.0 への移行は iOS の Safari がネックになっていたんですが、iOS 15 以降、なんとか動くようになっているので、移行に踏み切ったという感じです。
+
+---
+
+WebGL 2.0 は OpenGL ES 3.0 をベースにしているので、こちらも OpenGL ES 2.0 は必要無くなりました。
+
+ということで、OpenGL ES 2.0 は……おしまいです。
+
+---
+
+次のトピックは Windows 7 のサポート終了についてですね。
+
+https://forum.unity.com/threads/increasing-system-requirements-for-windows-editor-in-2023-1-and-dropping-support-for-windows-7.1355966/
+
+---
+
+これは実際のところ影響する人は少ないと思うんですが、今年出る Unity 2023.1 において、Unity Editor の Windows 7 対応が外されています。
+
+まあこれは、流石にそろそろサポートを終わってもいいだろうという判断ですね。
+
+---
+
+そもそもの Microsoft の Windows 7 サポートが終了していますが、現状、Unity Editor における Windows 7 使用率は既に 1% を切っていて、そこからも下がり続けています。
+
+なので、データから見てもそろそろ頃合いということですね。
+
+---
+
+Windows 7 サポートを続けていたことによって、Unity Editor に内蔵されている NodeJS や .NET ランタイムのバージョンアップが滞っているという事情もあります。
+
+---
+
+Unity Editor をより高性能に、より安全なものにしていくために、古いプラットフォームの対応終了は避けられないです。
+
+---
+
+ちなみに、Unity の Player 側の対応、つまり、ビルドしたアプリの動作環境としては、まだ Windows 7 をサポートに入れています。
+
+https://docs.unity3d.com/2023.1/Documentation/Manual/system-requirements.html
+
+---
+
+Editor についてのみサポートが終了になるということですね。
+
+なので、リリースしたアプリの対応範囲については現状維持が可能です。
+
+開発用のマシンは流石にもうアップデートしてください…という感じですね。
+
+---
+
+Windows 絡みのトピックで、DirectX 12 サポートについても触れておきたいと思います。
+
+---
+
+Unity における DirectX 12 サポートについては、長い間 Experimental タグが付いた状態が続いていました。
+
+正式にサポートされた機能ではなかったということですね。
+
+---
+
+ですが、これがようやく、Unity 2022.2 をもって正式サポートに移行しました。
+
+https://forum.unity.com/threads/dx12-is-out-of-experimental-since-2022-2-0a17.1301571/
+
+---
+
+DirectX 12 は DirectX 11 と比較して、必ずしも優位性があるというわけではないんですけど、大量の draw call が発生するような条件下では、CPU パフォーマンスの向上が期待できます。
+
+---
+
+このベンチマークは極端なケースなんですけど、Unity 2022.2 の時点でフレームレートの向上が確認できています。
+
+---
+
+そして Unity 2023.1 においては "Split Graphics Jobs" という、更に並列化を高めたモードが追加されたことによって、更なる CPU 最適化が期待できます。
+
+https://forum.unity.com/threads/directx12-and-graphics-jobs-improvements-in-2023-1-split-graphics-jobs-and-editor-support.1375098/
+
+---
+
+相変わらずケース・バイ・ケースでの効能になってしまうので、プロジェクト毎での判断が必要ではあるんですけど、ピーク性能を伸ばすための試みが色々行われていると理解すればいいと思います。
+
+---
+
+こんな感じで今回は Unity のプラットフォーム対応の最新情報について触れてきましたが、いかがでしたでしょうか？
+
+---
+
+いつもみたいな Unity の使い方の話じゃなくて、何というか情報番組的な感じだったので、これ需要があるのかちょっと心配なんですけど、役に立ったという方は、ぜひ高評価やコメントをいただけますとありがたいです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
