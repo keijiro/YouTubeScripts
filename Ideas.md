@@ -13,6 +13,7 @@
 - [Batch Transform API](https://forum.unity.com/threads/introducing-the-new-batch-transformpoint-and-gizmo-line-drawing-apis-arriving-in-2023-1.1364934/)
 
 - [Surface Gradient Bump Mapping](https://forum.unity.com/threads/experimental-surface-gradient-bump-mapping.1374897/)
+  - https://zero-radiance.github.io/post/surface-gradient/
 
 - Ray tracing mesh instancing [1](https://github.com/INedelcu/RayTracingMeshInstancingHDRP), [2](https://github.com/INedelcu/RayTracingMeshInstancingSimple)
 
