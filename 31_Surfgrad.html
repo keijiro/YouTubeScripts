@@ -18,64 +18,215 @@
   <body>
 <textarea id="source">
 
-- Hex-tiling の紹介
-- Surfgrad パッケージ
-- Surfgrad の概念
-  - HDRP の Decal の Normal Blending で使用されている。
-- サンプルの紹介
-- Surfgrad の基本的なセットアップ方法
-- Surfgrad ノード紹介
-- Hex-tiling の詳細
+みなさんこんにちは。
+
+今回のトピックは Hex-tiling と Surface Gradient Bump Mapping パッケージです。
 
 ---
 
-Surface Gradient Bump Mapping は、バンプマッピングやノーマルマップを扱うための便利なフレームワークです。
+> Camera
 
-これは Unity の中の人が論文を書いたんですが、難しいので簡単にまとめて説明します。
-
-バンプマッピングなどを一度 Surface Gradient と呼ばれる概念に変換することによって、扱いを簡単にするというものです。
+今回のメイントピックの Hex-tiling は、テクスチャのタイリングにおける繰り返しを目立たなくする手法です。
 
 ---
 
-というのも、バンプマッピングの合成って案外難しいんですよね。
+> Screenshot: Simple tiling
 
-単に２つのノーマルマップを合成するだけでも結構難しくて、変な計算で合成するとおかしな結果になってしまいます。
-
----
-
-また、異なるタンジェントを持つノーマルを合成するのも、かなり難易度高いです。
-
-例えば、UV で貼られたノーマルマップに、Triplanar Mapping を使ったノーマルマップを合成する、なんてのは難しかったりするわけですね。
+これは単純なタイリングを使ったサンプルですが、同じ絵柄が繰り返されているのが分かりますよね。
 
 ---
 
-それがこの Surface Gradient に一旦変換すると、なんと足し算だけで合成できてしまいます。
+> Screenshot: Hex-tiling
 
-UV でノーマルマップを貼りつつ、ディテールの表現は Triplanar Mapping を使う、なんてミックスも簡単にできます。
+Hex-tiling を使うとこんな感じになります。
 
----
-
-また、凹凸の強弱は掛け算でスケールをかけるだけで実現できます。
-
-色々注意の必要だったバンプ表現が、破綻することなく直感的な足し算や掛け算で扱えてしまうんですね。
+単純なタイリングと比べると、繰り返しがかなり目立たなくなっているのが分かると思います。
 
 ---
 
-そして、合成や加工を行った後の Surface Gradient は、Resolve という操作を行なって、ワールド座標系上のノーマルベクトルに変換できます。
+> Screenshot: Hex overlay
 
-これをシェーダーの結果として出力すればいいわけですね。
+実際にはこんな感じの六角形のタイルが敷き詰められています。
 
----
-
-この Surface Gradient の仕組みは、実は HDRP 内部でも既に使用されています。
-
-Decal を使ってノーマルマップを合成することができますが、ここに組み込まれています。
+各 hex でランダムにオフセットをかけることで、単純な繰り返しが発生しないようになっているんですね。
 
 ---
 
-今回紹介しているこの Surface Gradient Bump Mapping パッケージは、これを Shader Graph の中で使えるようにするものです。
+> Editor: Hex rotation
+
+また、hex 内でランダムに回転をかけることで、更に繰り返しを目立たなくすることもできます。
 
 ---
+
+> Camera
+
+こんな感じでなかなか便利そうな hex-tiling なんですが、現在この機能は、Surface Gradient Bump Mapping という experimental パッケージの１機能として提供されています。
+
+---
+
+Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピングを扱うためのパッケージなんですが、なんで hex-tiling がこのパッケージの１機能として提供されているのか。
+
+---
+
+ちょっと分かり難いと思うので、順を追って説明したいと思います。
+
+---
+
+> B-Roll: Paper
+
+この Surface Gradient Bump Mapping は、普通のノーマルマップをはじめとするバンプマッピング全般を扱った数学的なフレームワークの一種です。
+
+---
+
+面の凹凸の情報を、いちど surface gradient と呼ばれるベクトルに変換することによって、扱いを簡単にします。
+
+---
+
+> B-Roll: Webpage
+
+というのも、ノーマルマップの合成って案外難しいんですよね。
+
+---
+
+単に２つのノーマルマップを合成するだけでも結構難しくて、どう計算すればいいのか、昔から色々と議論されています。
+
+---
+
+> Desktop: Multi-bump mapping
+
+また、異なる手法を混ぜて使うのも、結構面倒だったりします。
+
+---
+
+基本となるノーマルマップの上に、ディテールを表現するためのバンプマップ、そこへ更に decal で凹凸を加えたり…といったような複数の要素を破綻無く合成するには、かなり慎重に実装する必要があります。
+
+---
+
+> Desktop: Shader Graph Editor
+
+それがこの surface gradient に一旦変換すると、なんと足し算だけで合成できちゃうんですね。
+
+---
+
+凹凸の強度も掛け算で簡単にスケールできちゃいます。
+
+また、計算の順序も特に気にする必要ありません。
+
+---
+
+> Camera
+
+色々と注意の必要だった bump mapping が、破綻することなく簡単な計算で扱えてしまうというわけですね。
+
+---
+
+> Desktop: Shader Graph Editor
+
+合成や加工を行った後の surface gradient は、Resolve という操作を行うことで、world space のノーマルに変換できます。
+
+---
+
+これをシェーダーの結果として出力すればいいわけです。
+
+ちなみに Shader Graph のデフォルトは tangent space なので、ここで world space に変更しておく必要がありますね。
+
+---
+
+> Camera
+
+この surface gradient の仕組みは、実は HDRP 内部でも既に使用されています。
+
+---
+
+> Screenshot: Decal Manual
+
+HDRP では Decal でノーマルを貼り付けることができますが、ここで surface gradient が既に使われています。
+
+---
+
+> Camera
+
+今回紹介しているこの Surface Gradient Bump Mapping パッケージは、これを Shader Graph の中で自由に使えるようにしたものです。
+
+---
+
+HDRP と URP の両方に対応しています。
+
+> Desktop: Package Manager
+
+Experimental パッケージなので、Package Manager のリストには表示されません。
+
+---
+
+"Add package by name" を使って、"com.unity.surface-gradient-bump-mapping" と明示的に名前を打ち込む必要があります。
+
+---
+
+> Desktop: Asset Store
+
+このパッケージの使い方については、Asset Store の方にサンプルプロジェクトが公開されていて、それを見るのが分かりやすくていいと思います。
+
+---
+
+> Editor: Sample project
+
+Surface Gradient の使い方について、インタラクティブに学ぶことのできるコンテンツとなっています。
+
+ぜひチェックしてみてください。
+
+---
+
+> Camera
+
+…と言った感じで Surface Gradient Bump Mapping について解説してきましたが、ここでようやく hex-tiling の話に戻りましょう。
+
+---
+
+なんで hex-tiling の機能が surface gradient のパッケージに実装されているのかというと、hex-tiling におけるノーマルマップの合成に surface gradient の概念が応用されているから、というのが回答になると思います。
+
+---
+
+> B-Roll: Papers
+
+そもそもこの hex-tiling と surface gradient の両方とも、Unity のエンジニアである Mikkelsen さんによって研究開発されたものなんですよね。
+
+---
+
+お互いに関連性の高い技術なので、一つのパッケージに格納されているのは自然なことだと思います。
+
+---
+
+> Camera
+
+あとは、surface gradient を使う場合に hex-tiling ってやっぱり使いたくなるんですよね。
+
+---
+
+> Desktop: Shader Graph Editor
+
+ノーマルマップを貼った上に、triplanar mapping を使って凹凸のディテールを加える、なんて合成をやったりするわけですが、そこで hex-tiling が活躍します。
+
+---
+
+ぜひ両方の技術をうまく組み合わせて使いこなしてください。
+
+---
+
+今回はこんな感じで hex-tiling と surface gradient について解説してきましたが、いかがでしたでしょうか？
+
+---
+
+かなり遠回りな説明になってしまった、というか、ほとんど surface gradient の話をしていたような気もしますが、まあどちらも重要な技術ですよね。
+
+---
+
+まあ hex-tiling の方が分かりやすいんで、多くの人に興味を持ってもらえると思うんですけど、実は surface gradient の方も、今まで難しかったことを簡単にするという意味では、かなりインパクトのある技術なので、ぜひ触れてみて欲しいなと思います。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
