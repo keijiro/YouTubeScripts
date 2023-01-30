@@ -26,7 +26,7 @@
 
 > Camera
 
-今回のメイントピックの Hex-tiling は、テクスチャのタイリングにおける繰り返しを目立たなくする手法です。
+今回のメイントピックの hex-tiling は、テクスチャのタイリングにおいて繰り返しを目立たなくする手法です。
 
 ---
 
@@ -72,7 +72,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> B-Roll: Paper
+> B-Roll: [Paper](https://jcgt.org/published/0009/03/04/)
 
 この Surface Gradient Bump Mapping は、普通のノーマルマップをはじめとするバンプマッピング全般を扱った数学的なフレームワークの一種です。
 
@@ -82,7 +82,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> B-Roll: Webpage
+> B-Roll: [Webpage](https://blog.selfshadow.com/publications/blending-in-detail/)
 
 というのも、ノーマルマップの合成って案外難しいんですよね。
 
@@ -92,7 +92,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> Desktop: Multi-bump mapping
+> Editor: Multi-bump mapping
 
 また、異なる手法を混ぜて使うのも、結構面倒だったりします。
 
@@ -102,7 +102,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> Desktop: Shader Graph Editor
+> Editor: Surface gradient composition
 
 それがこの surface gradient に一旦変換すると、なんと足し算だけで合成できちゃうんですね。
 
@@ -120,7 +120,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> Desktop: Shader Graph Editor
+> Editor: Resolve node
 
 合成や加工を行った後の surface gradient は、Resolve という操作を行うことで、world space のノーマルに変換できます。
 
@@ -138,7 +138,7 @@ Surface Gradient Bump Mapping は、まあ名前の通り、バンプマッピ�
 
 ---
 
-> Screenshot: Decal Manual
+> Screenshot: [Decal manual](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@15.0/manual/Decal.html)
 
 HDRP では Decal でノーマルを貼り付けることができますが、ここで surface gradient が既に使われています。
 
@@ -152,7 +152,9 @@ HDRP では Decal でノーマルを貼り付けることができますが、�
 
 HDRP と URP の両方に対応しています。
 
-> Desktop: Package Manager
+---
+
+> Editor: Package Manager
 
 Experimental パッケージなので、Package Manager のリストには表示されません。
 
@@ -162,7 +164,7 @@ Experimental パッケージなので、Package Manager のリストには表示
 
 ---
 
-> Desktop: Asset Store
+> Webpage: [Asset Store page](https://assetstore.unity.com/packages/templates/tutorials/surface-gradient-bump-mapping-samples-240786)
 
 このパッケージの使い方については、Asset Store の方にサンプルプロジェクトが公開されていて、それを見るのが分かりやすくていいと思います。
 
@@ -178,7 +180,7 @@ Surface Gradient の使い方について、インタラクティブに学ぶこ
 
 > Camera
 
-…と言った感じで Surface Gradient Bump Mapping について解説してきましたが、ここでようやく hex-tiling の話に戻りましょう。
+…と言った感じで Surface Gradient Bump Mapping について解説してきましたが、ここでようやく hex-tiling の話に戻ります。
 
 ---
 
@@ -186,7 +188,7 @@ Surface Gradient の使い方について、インタラクティブに学ぶこ
 
 ---
 
-> B-Roll: Papers
+> B-Roll: Papers [[1]](https://jcgt.org/published/0009/03/04/) [[2]](https://jcgt.org/published/0011/03/05/)
 
 そもそもこの hex-tiling と surface gradient の両方とも、Unity のエンジニアである Mikkelsen さんによって研究開発されたものなんですよね。
 
@@ -202,7 +204,7 @@ Surface Gradient の使い方について、インタラクティブに学ぶこ
 
 ---
 
-> Desktop: Shader Graph Editor
+> Editor: Multi-bump mapping
 
 ノーマルマップを貼った上に、triplanar mapping を使って凹凸のディテールを加える、なんて合成をやったりするわけですが、そこで hex-tiling が活躍します。
 
