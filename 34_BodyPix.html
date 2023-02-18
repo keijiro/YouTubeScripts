@@ -120,7 +120,7 @@ GitHub のこちらにあります。
 
 ---
 
-> Desktop: Composite demo
+> Demo: Composite sample
 
 まず１つ目のサンプルは、バーチャル背景を実装したものです。
 
@@ -132,27 +132,29 @@ Anonymize スイッチを入れることで、顔に pixelization エフェク�
 
 ごく簡単に仕組みを説明します。
 
-BodyPix の BodyDetector クラスにある MaskTexture プロパティからマスクを取得することができます。
+BodyPix の BodyDetector クラスにある MaskTexture プロパティからマスク情報を取得することができます。
 
 ---
+
+> Screenshot: Shader graph
 
 これを Shader Graph に渡して合成を行っています。
 
-Mask Texture はそのまま使うこともできますが、綺麗にサンプリングするためのヘルパー関数も用意されています。
-
 ---
+
+Mask Texture はそのまま使うこともできますが、綺麗にサンプリングするためのヘルパー関数も用意してあります。
 
 ここでは Custom Function ノードを使って、このヘルパー関数を呼び出しています。
 
-顔のパーツの特定なども、同じアプローチを使っています。
-
 ---
+
+顔のパーツの特定なども、同じアプローチを使っています。
 
 そのままコピペしたり、ちょっと改造したりすれば、他の用途にも使えますので、ぜひ活用してください。
 
 ---
 
-> Desktop: Catcher demo
+> Demo: Catcher sample
 
 ２つ目のサンプルは、キーポイントを使った簡単なゲームのようなものです。
 
@@ -170,8 +172,6 @@ Mask Texture はそのまま使うこともできますが、綺麗にサンプ�
 
 Keypoint struct には Position と Score という２つのメンバーがあります。
 
----
-
 Score が低い時の結果は当てにならないので、除外する必要があります。
 
 ここでは 0.8 以上の時だけ Position を適用していますね。
@@ -180,13 +180,13 @@ Score が低い時の結果は当てにならないので、除外する必要�
 
 > Camera
 
-最後に BodyPix の演算負荷について触れておきたいと思います。
+最後に BodyPix の処理負荷について説明しておきます。
 
 この BodyPix プラグインは Barracuda という推論エンジンを使って機械学習モデルを動かしています。
 
 ---
 
-> B-Roll: Barracuda web page
+> B-Roll: [Barracuda web page](https://docs.unity3d.com/Packages/com.unity.barracuda@3.0/manual/index.html)
 
 Barracuda は GPU に対応しているので、BodyPix を動かす負荷も GPU 側にかかってくることになります。
 
@@ -200,7 +200,7 @@ GPU の性能次第で速度が変わってくるということですね。
 
 ---
 
-> Desktop: Package contents
+> Screenshot: Package contents
 
 FaceDetector を生成するときに ResourceSet というアセットを与えるのですが、ここでその選択を行えます
 
@@ -216,13 +216,13 @@ FaceDetector を生成するときに ResourceSet というアセットを与え
 
 ---
 
-> Code Editor
+> Code editor
 
 あとは BodyDetector クラスのコンストラクタの引数に入力画像の解像度を設定するのですが、これも負荷に大きな影響を与えます。
 
 ---
 
-解像度を高くすればするほど遅くなるということですね。
+解像度を高くすればするほど重くなるということですね。
 
 ---
 
@@ -245,6 +245,10 @@ FaceDetector を生成するときに ResourceSet というアセットを与え
 ---
 
 ただ、ちょっとしたアイデアを試したり、プロトタイピングを行うには、とても便利だと思います。
+
+---
+
+> Camera
 
 BodyPix みたいに、なんでもできて、そこそこの性能を出してくれるモデルっていうのは、そんなに存在しないんですよね。
 
