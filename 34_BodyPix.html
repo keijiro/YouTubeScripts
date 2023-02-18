@@ -36,37 +36,55 @@ BodyPix とは Google で開発された軽量な機械学習モデルの一種�
 
 ---
 
+> Camera with mask sample
+
 まず、BodyPix を使ってできること、その１は、マスクの生成です。
 
 このように画像から人体の部分を特定して、マスクを生成します。
+
+---
+
+> Camera with BG composition
 
 これを使えば、ビデオチャットなんかでよくある、バーチャル背景の仕組みを簡単に作れますね。
 
 ---
 
+> Camera with body parts overlay
+
 BodyPix を使ってできること、その２は、ボディパーツの特定です。
+
+---
 
 今ここでは色分けして表示していますが、人体のそれぞれのパーツが画像のどの領域にあるのか、特定することができます。
 
 ---
 
+> Camera with face pixelization
+
 これを使えば、例えば顔だけぼかしたり、なんてことが簡単にできますね。
 
 ---
+
+> Camera with keypoints
 
 BodyPix を使ってできること、その３は、キーポイントの特定です。
 
 鼻や目、肩や手首など、１７個のキーポイントが定義されていて、それらの位置を特定することができます。
 
+---
+
 これを使えば、人体の動きを入力に使うことが簡単にできますね。
 
 ---
+
+> Camera
 
 …と言ったように、BodyPix には複数の機能が単一のモデルに組み込まれています。
 
 ---
 
-> B-Roll: BodyPix web page
+> B-Roll: [BodyPix web page](https://blog.tensorflow.org/2019/11/updated-bodypix-2.html)
 
 オリジナルの BodyPix はこれらの機能を複数の人体に適用する、いわゆる multi-person support があります。
 
@@ -84,7 +102,7 @@ BodyPix を使ってできること、その３は、キーポイントの特定
 
 ---
 
-> Screenshot: Webpage
+> Screenshot: [BodyPixSample repository](https://github.com/keijiro/BodyPixSample)
 
 GitHub のこちらにあります。
 
@@ -92,7 +110,7 @@ GitHub のこちらにあります。
 
 ---
 
-> B-Roll: BodyPix GitHub page
+> B-Roll: [BodyPixBarracuda repository](https://github.com/keijiro/BodyPixBarracuda)
 
 このサンプルから更に別のリポジトリにある BodyPix カスタムパッケージをインポートしています。
 
