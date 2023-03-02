@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>35 Scripting Dev Blitz Day</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは Scripting Dev Blitz Day です。
+
+---
+
+> Camera
+
+今回のトピックにある "Dev Blitz Day" というのは、最近 Unity で行われている１日限定イベントの総称です。
+
+---
+
+特定のカテゴリについてユーザーの皆さんから質問を募集して、開発チームのメンバーがそれに直接回答するという企画です。
+
+---
+
+> B-roll: [Forum thread](https://forum.unity.com/threads/scripting-dev-blitz-day-2023-q-a.1399927/)
+
+先日開催された Scripting Dev Blitz Day は、C# Scripting System をテーマにしたものでした。
+
+---
+
+今回はフォーラムと Discord の２箇所で同時開催されました。
+
+ちょっと中身を覗いてみましょうか。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/readonlynativearray-t.1403611/)
+
+例えばこのスレッドでは、NativeArray の read-only 版である ReadOnlyNativeArray を追加してほしい、って提案されてますね。
+
+---
+
+それに対する答えは、AsReadOnlySpan メソッドを使えば ReadOnlySpan として参照できるから、それを使ってください、というようなものになっています。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/span-in-unitys-api.1403599/)
+
+この Span に関する言及は他のスレッドにもありました。
+
+---
+
+このスレッドでは、最近 Unity の新しい API では Span を使い始めてるけど、既存の API でも Span を使えるようにしてほしいな、という意見が投げられています。
+
+---
+
+回答はそれに同意するものとなっていて、今後 Span への対応を進めていくし、具体的に対応してほしい API があったらリクエストしてね、というようなものになっています。
+
+---
+
+> Camera
+
+こういった開発側の姿勢や温度感みたいなものを得る機会って、なかなか他に無いんですよね。
+
+---
+
+この Dev Blitz Day は、公式のアナウンスやドキュメントでは共有されにくい、細かな情報を補うための良い機会になっていると思います。
+
+---
+
+あと、今回の Dev Blitz Day で特に興味深かったのは、CoreCLR への言及が繰り返されていたことですね。
+
+---
+
+> B-roll: [Blog article](https://blog.unity.com/engine-platform/unity-and-net-whats-next)
+
+CoreCLR は .NET ランタイムの一種です。
+
+---
+
+Unity では現在 Mono をランタイムとして使用していますが、これを最新の CoreCLR に入れ替える話が進んでいます。
+
+---
+
+この CoreCLR への入れ替えが実現すれば、.NET 環境の近代化が実現することになります。
+
+具体的には、パフォーマンスの向上や、最新機能、デバッグツールのサポートの拡大などが期待できます。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/expected-performance-of-new-coreclr-vs-mono-vs-il2cpp.1403353/)
+
+このスレッドでは CoreCLR になれば Mono の倍以上は速くなるよ、みたいなことが書かれていますね。
+
+---
+
+まあ実際には条件次第になってくるでしょうから、あまり過剰な期待はしない方がいいと思いますが、とにかく CoreCLR への移行がとても重要な課題になっていることは事実です。
+
+---
+
+> [Discord thread](https://discord.com/channels/489222168727519232/1078011622167171182/1078054826442772582)
+
+Discord のこちらのスレッドでは、移行時期について触れられていますが、今年中のリリースは無さそうですね。
+
+長期的な計画であると理解する必要がありそうです。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/mathematics-vs-vector3.1403497/)
+
+このスレッドでは、Vector Math 関係の機能が複数存在していることについて疑問が投げられています。
+
+---
+
+例えば３次元ベクトルを使う場合、Unity に古くから存在する Vector3 と、新しく実装された Mathematics パッケージの float3 と、どちらを使うべきかという問題があります。
+
+---
+
+> [.Net manual](https://learn.microsoft.com/en-us/dotnet/api/system.numerics.vector3?view=netstandard-2.1)
+
+ここへ更に .NET で提供されている System.Numerics の Vector3 クラスなども選択肢として加わることになります。
+
+---
+
+> B-roll: [Forum thread](https://forum.unity.com/threads/mathematics-vs-vector3.1403497/)
+
+このスレッドでもはっきりとした答えは出されていませんが、.NET の System.Numerics の重要性が今後増すのではないかという雰囲気が、何となく感じられます。
+
+---
+
+CoreCLR への移行が実現すれば、.NET の Vector クラスも SIMD 命令セットによる高速化が望めますからね。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/unity-simd-acceleration.1403365/)
+
+関連する話として、こちらのスレッドでは CoreCLR の SIMD 対応について触れられています。
+
+---
+
+最終的には、Unity の Vector クラスも、 Mathematics パッケージも、全て CoreCLR によって最適化されることを目指しているようです。
+
+---
+
+> Camera
+
+やはり CoreCLR への移行があらゆる部分でキーとなってくるんですね。
+
+---
+
+> [Forum thread](https://forum.unity.com/threads/async-await-future-design.1403386/)
+
+もう一点、個人的に興味を持ったのは、 async/await について触れたスレッドです。
+
+---
+
+ここでは、最近 Unity で対応の進んでいる async/await について、どう使っていくべきかという質問が投げられています。
+
+---
+
+回答としては、Unity が提供している Awaitable クラスを活用してほしい、とか、ValueTask は使用をお勧めしない、とか、いくつか要点が挙げられています。
+
+---
+
+この辺りの async/await 対応の進捗については、また別の機会に詳しく触れたいですね。
+
+---
+
+> B-roll: [Manual page](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/MonoBehaviour-destroyCancellationToken.html)
+
+最近は Unity 標準 API として Cancellation Token が提供されるようになったり、色々と async/await が使いやすい環境になってきています。
+
+---
+
+なんらかのまとめや how-to などを提供できたらと思っています。
+
+---
+
+今回はこんな感じで Scripting Dev Blitz Day について解説しましたが、いかがでしたでしょうか？
+
+---
+
+この Dev Blitz Day は、最新情報が色々と飛び出してくる貴重なイベントなので、自分と関係するテーマで開催された時には、ぜひ内容をチェックすることをお勧めします。
+
+---
+
+今まで既に、SRP とか UI とか Multiplay とか、色んなテーマで開催されているんですよね。
+
+次の開催時期とテーマはまだ分かってないですけど、まだオーディオとかアニメーションとか、やってない気がしますね。
+
+---
+
+開催のタイミングは Unity for Games の Twitter カウントなどでアナウンスしてますので、興味のある方はフォローしてみてください。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
