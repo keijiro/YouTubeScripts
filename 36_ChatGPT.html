@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>36 ChatGPT</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+みなさんこんにちは。
+
+今回のトピックは ChatGPT API です。
+
+---
+
+ChatGPT は最近何かと注目されている AI の一種ですね。
+
+---
+
+> B-roll: [ChatGPT API article](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)
+
+先日、アプリケーション開発用の API が公開されたことで話題になりました。
+
+---
+
+この ChatGPT API は、もちろん Unity からも簡単に使うことができます。
+
+最先端の Large Language Model を自分のアプリに組み込むことができるなんて、夢があってワクワクしますよね。
+
+---
+
+> Camera
+
+僕も早速、色々と試し始めています。
+
+---
+
+> Demo: AI Shader
+
+手始めに proof-of-concept としてこんなものを作ってみました。
+
+AI Shader というプロジェクトで、Shader を ChatGPT に書いてもらうことができます。
+
+---
+
+まず Inspector のここにシェーダーの説明を書きます。
+
+ChatGPT の対応している言語なら何でも大丈夫です。
+
+---
+
+「このシェーダーは UV 座標系上で円を描画します。半径と主色と背景色をプロパティで変更することができます。」
+
+こんな感じにしてみました。
+
+---
+
+書き終わったら、この ”Generate” ボタンを押します。
+
+すると、こんな風にシェーダーを自動的に生成してくれます。
+
+Apply ボタンを押せば、これがシェーダーとして使用可能になります。
+
+---
+
+一応、お願いした通りの挙動になっているようですね。
+
+プロパティも付いていますし、名前も適当なものを付けてくれています。
+
+---
+
+> Camera
+
+なかなか夢のあるデモンストレーションですよね。
+
+---
+
+> [GitHub](https://github.com/keijiro/AIShader)
+
+このプロジェクトは GitHub のこちらに置いてありますので、興味のある方は試してみてください。
+
+---
+
+> Camera
+
+ちょっと仕組みを解説しておきましょう。
+
+---
+
+> [Chat GPT API reference](https://platform.openai.com/docs/api-reference/chat/create)
+
+ChatGPT API は JSON を使った一般的なウェブ API です。
+
+リクエスト内容を JSON にまとめて、POST で投げると、レスポンスが得られます。
+
+---
+
+> Split web pages [1](https://docs.unity3d.com/ScriptReference/JsonUtility.html), [2](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html)
+
+こういったウェブ API を使用する場合、 Unity では JsonUtility と UnityWebRequest の組み合わせを使うと便利です。
+
+---
+
+> Split screen (reference / code)
+
+API の仕様に沿って型を定義しておけば、 JsonUtility を使って、C# 上のデータを JSON にシリアライズしたり、逆に JSON から C# 上のデータにデシリアライズすることができます。
+
+---
+
+実際のリクエストを構築しているのは、この辺りのコードですね。
+
+Unity の Unlit シェーダーに書きなさい、とか、余計な説明は省きなさい、とか、そう言う定型文を加えています。
+
+---
+
+これを使ってリクエストを変換したら、UnityWebRequest を使ってサーバーに投げます。
+
+結果を受け取ったら、再び JsonUtility を使って C# 上のデータ構造にデシリアライズします。
+
+とても簡単なんですが、ちょっと面倒なのは UnityWebRequest の非同期処理をどう組むかという部分ですね。
+
+今回はあくまでも proof-of-concept なので、とても不真面目に実装しています。
+
+プログレスバーの表示も、よく見ると完全にインチキですね。
+
+皆さんのプロダクトでは絶対に真似しないでください。
+
+でもまあ、コンセプトを素早く検証するには、こういう組み方でもいいでしょう。
+
+それで、この AI シェーダーというコンセプトを検証してみたわけですが、これが実用的かどうかについて触れておきたいと思います。
+
+まず現状において実用性はほとんどありません。
+
+今回使用した ChatGPT モデルはコーディングに特化されてものではないですから、もとよりこのような用途に使うのは無理があります。
+
+生成されるシェーダーもエラーが頻繁に混入しますし、複雑なものを組むことはできません。
+
+ただ自然言語を使って、AI とやり取りしながら、二人三脚でシェーダーを組み上げていく、という工程には、今までにない開発体験があったと思います。
+
+個人的な感想としては、これは今まであった textual programming と visual programming の２つの方式に続く新しいプログラミング方式になりうるのではないかという期待がありました。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
