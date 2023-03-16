@@ -232,7 +232,7 @@ Unity で衝突を検出するには、多くの場合 OnCollision 系のコー�
 
 > B-roll
 
-新しく実装された CollisionEvent delegate は、シーン中で発生している衝突を全て配列に詰め込んで、１回の呼び出しで渡してくれます。
+新しく実装された ContactEvent delegate は、シーン中で発生している衝突を全て配列に詰め込んで、１回の呼び出しで渡してくれます。
 
 ---
 
@@ -254,7 +254,7 @@ Unity で衝突を検出するには、多くの場合 OnCollision 系のコー�
 
 これを OnCollisionStay を使って実装すると、大体 3.4 ms ぐらいかかっているようでした。
 
-これを CollisionEvent に変更することで 2.6 ms ぐらいにまで減らすことができました。
+これを ContactEvent に変更することで 2.6 ms ぐらいにまで減らすことができました。
 
 ---
 
