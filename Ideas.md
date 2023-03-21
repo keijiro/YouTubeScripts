@@ -1,7 +1,3 @@
-- FindObjectByType
-
-- Adaptive Performance on Android
-
 - Mesh API tutorial
   - Line
   - Triangle
