@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>38 Line Thickness</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回の動画はいつもと違って、ちょっと短めの補足動画になります。
+
+---
+
+> B-roll: YouTube page
+
+少し前に Mesh クラス入門というチュートリアルを公開しましたが、そこで貰ったコメントの中に、線の太さを変えるにはどうしたらいいか、というものがありました。
+
+---
+
+この話はちょっと面白いので触れておきたいと思います。
+
+---
+
+> Camera
+
+まず先に言っておくと、簡単な解決方法はありません。
+
+---
+
+もしかしたら簡単な方法があるんじゃないか、って期待している方もいるかもしれませんが、残念ながらそれは無い、というのが今回の話です。
+
+---
+
+残念ではありますが、簡単に解決できない、って情報も、重要っちゃ重要ですよね。
+
+もしこれを簡単に解決できるアセットなどが販売されていたら、それにはちゃんと価値があるということです。
+
+導入を検討してみていいと思います。
+
+---
+
+> Bumper
+
+---
+
+> B-Roll: OpenGL Manual
+
+昔から OpenGL などを使っていた方にしてみれば、glLineWidth とかで線の太さって変えられたのに、なんで Unity ではできないのか、って不思議に思うかもしれません。
+
+---
+
+> B-Roll: OpenGL Manual
+
+確かに OpenGL にはそういった関数が存在しますが、挙動が実装依存になっている部分があって、実際の運用には問題が発生しがちなんですよね。
+
+---
+
+> Camera
+
+また、DirectX や Metal などの他の API では、そもそも線の太さを変える機能自体、存在していません。
+
+---
+
+API 側でサポートされていない以上、線の太さを変えるには、自分で対処する必要があります。
+
+---
+
+> Editor: Line Renderer Component
+
+つまり、Triangles 、ポリゴンを使って太さのある線を表現するということですね。
+
+---
+
+これはまあ頑張って実装すればできないことはないんですが、綺麗に破綻無く仕上げるには、かなり頑張る必要があります。
+
+---
+
+> Camera
+
+正直、ここでのチュートリアルで扱う範疇は超えてしまっていると思います。
+
+---
+
+このアプローチを使いたい場合は、やはりサードパーティーのライブラリを探すのが無難かもしれません。
+
+---
+
+> Bumper
+
+---
+
+> Camera
+
+もう一つの簡単なアプローチとして、ラインだけ低解像度でレンダリングする、というものがあります。
+
+---
+
+> Desktop: GitHub
+
+これは実装が簡単なので、前回のサンプルプロジェクトに付け足ししてみました。
+
+---
+
+> Editor: Demo
+
+この BoldLine というシーンがそれですね。
+
+---
+
+> Comparison
+
+通常の動作と比較すると、ラインが少し太くなっているのが分かると思います。
+
+---
+
+> Editor: Sample scene
+
+やっていることは簡単で、追加のカメラを配置して、低解像度の Render Texture に対してレンダリングを行っています。
+
+---
+
+これを Unity 2022.2 から使える Full Screen Pass Renderer Feature を使って、メインのカメラに合成しています。
+
+Full Screen Pass については、別の動画で紹介しているので、参考にしてみてください。
+
+---
+
+> Editor: Screen Resolution Comparison
+
+このように、ラインだけは固定された低解像度の Render Texture に対してレンダリングすることによって、ラインの見た目上の太さを固定することができます。
+
+---
+
+画面の解像度を高くしても、ラインが細くなったりしない、ということですね。
+
+---
+
+> Zoom-up
+
+ただ、皆さん恐らくお気づきの通り、低解像度でレンダリングしているので、ラインだけボケボケになってしまっていて、何だか貧相ですよね。
+
+---
+
+そういうデメリットがあるので、必ずしもおすすめの解決方法ではありません。
+
+---
+
+> Camera
+
+ただ、何しろ簡単に実装できるので、若干のクオリティは犠牲になっても構わない、というシチュエーションでは有用な方法だと思います。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
