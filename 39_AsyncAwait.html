@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>39 async/await</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは Unity における C# の async/await 対応です。
+
+---
+
+最近の Unity のバージョンでは、C# スクリプティング環境の近代化の一環として、非同期処理、いわゆる "async/await" への対応が進められています。
+
+---
+
+今回はその対応の状況と方向性についてお話ししたいと思います。
+
+今まで async/await は使ってこなかった、という方も、今回をきっかけに興味を持ってもらえれば幸いです。
+
+---
+
+> Screenshot: Reference manual
+
+まず、最初に触れておきたいのは Awaitable クラスについてです。
+
+このクラスは Unity 2023.1 の新機能となります。
+
+---
+
+> B-roll: Web pages
+
+通常、.NET の async/await では Task や ValueTask が使われると思いますが、Unity では Awaitable が async/await の基本となります。
+
+---
+
+> Camera
+
+Awaitable クラスは、Unity の coroutine を async/await の書式で使えるようにしたもの、と考えると分かりやすいかもしれません。
+
+---
+
+> Sample code
+
+例えば、従来の coroutine の書式はこんな感じでした。
+
+---
+
+WaitForSeconds を “yield return” して１秒間待ったり、null を “yield return” して次のフレームを待ったり、という感じですね。
+
+これを async/await 風に書き換えると、こんな感じになります。
+
+---
+
+WaitForSecondsAsync を使って１秒間待ったり、NextFrameAsync を使って次のフレームを待ったりできます。
+
+これだけだと coroutine と比べてそんなに便利そうに見えないかもしれませんが、この時点でも有利な点はいくつかあります。
+
+---
+
+> B-roll: UnityEvent class reference
+
+例えば async void 関数は単なる void 関数として扱うこともできるので、UnityEvent に登録することができます。
+
+---
+
+> Demo: UI callback
+
+つまり、UI などのコールバックとして登録することもできるということですね。
+
+UI のリアクションの中で時間経過を扱うことも簡単にできます。
+
+---
+
+> Camera
+
+もう一点、Unity 2023.1 で行われているのは、一部 API の async 対応です。
+
+---
+
+> [AsyncGPUReadback](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Rendering.AsyncGPUReadback.html)
+
+例えばこの AsyncGPUReadback という、GPU からデータを読み出すためのクラスがあるんですが、これに “Async” バージョンが追加されています。
+
+---
+
+> Code
+
+従来この API は、GPU からのデータ読み出し完了の通知を、コールバック関数で受け取っていました。
+
+こんな感じのコードですね。
+
+---
+
+この方式は、実は微妙に使いにくいところがあります。
+
+例えば、データ読み出しを開始したフレーム番号を記録したいと思ったら、どうすればいいのか。
+
+---
+
+ここで特定したフレーム番号を、ここで使いたいんですが……
+
+うーん、こんな感じには書けませんよね。
+
+---
+
+ここからここへ、どうやって変数を引き渡せばいいのか。
+
+これ解決するの、結構めんどくさいです。
+
+---
+
+これが、新しい “Async” バージョンのメソッドを使えば、簡単に解決できちゃいます。
+
+フレーム番号を特定して、データ読み出しをリクエストしつつ ”await” で結果を待ちます。
+
+---
+
+結果を得た後、そのままこれらの変数を使うことができます。
+
+だいぶシンプルにまとまりましたね。
+
+---
+
+> Camera
+
+次に紹介したいのは、Awaitable を使ったバックグラウンドスレッドの活用です。
+
+---
+
+> Screenshot: Scripting reference
+
+Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２つのメソッドが用意されています。
+
+---
+
+これらのメソッドを使うことで、簡易的に処理をバックグラウンドスレッドに移すことができます。
+
+---
+
+> Code sample
+
+具体的な例を見てみましょう。
+
+先ほどの GPU Readback のサンプルで、GPU から読み出したデータを PNG 画像形式で保存するようにしてみました。
+
+---
+
+簡単に実装できるんですが、このエンコードの処理とファイル書き込みの処理は、結構時間がかかります。
+
+---
+
+> Demo
+
+こんな風にメインスレッドで動かすと、処理がここでブロックしてしまい、画面が一瞬固まってしまうかもしれません。
+
+---
+
+> Code sample
+
+そんな時は、こうやって BackgroundThreadAsync を使って、処理をバックグラウンドスレッドに移すことができます。
+
+---
+
+そして、処理が終わったら MainThreadAsync を使ってメインスレッドに戻すわけですね。
+
+これで、時間のかかる処理を裏で動かして、ブロッキングを避けることができます。
+
+---
+
+> Camera
+
+ただし、Unity の API のほとんどはバックグラウンドスレッドで動かすことができないので注意してください。
+
+---
+
+> Screenshot: Scripting reference
+
+ここで使用している ImageConversion クラスは特別にスレッドセーフ対応されているので、このような使い方ができます。
+
+---
+
+> Camera
+
+もうひとつ、これは Unity 2022.2 の時点で行われていたことですが、Unity の API に cancellation token が追加されています。
+
+---
+
+> Screenshot: Script reference
+
+具体的には、MonoBehaviour に destroyCancellationToken や、Application に exitCancellationToken が実装されています。
+
+---
+
+> Camera
+
+Cancellation token というのは、async/await を使った非同期処理の中で、処理の中断を行うための仕組みですね。
+
+---
+
+> B-roll: Script reference page
+
+Unity 上の game object の破棄や、アプリの終了をトリガーとして非同期処理を中断したい場合に、これらの cancellation token が使えます。
+
+---
+
+> Camera
+
+こんな感じで Unity の async/await 対応は着々と進められていますが、残念ながらまだ完成というわけではない、というのが正直な所です。
+
+---
+
+例えば GC Allocation の問題があります。
+
+---
+
+> Screenshot: Awaitable manual
+
+Awaitable クラスではオブジェクトプールを使ってオブジェクトの使い回しを行っていますが、これは await を行った場合のみ、と言う制限が付いています。
+
+---
+
+> Code
+
+こんな風に呼び出し側が await を行っていればプールに回収されます。
+
+---
+
+でも、こんな風に Start や Update、UnityEvent で呼ばれるコールバックなどは await を経由しないので、プールには回収されません。
+
+GC Allocation が発生し続けることになります。
+
+これはちょっともどかしいですね。
+
+---
+
+> Camera
+
+また、バックグラウンドスレッドについても、Unity 側で特にスレッドプールを用意しているわけではありません。
+
+---
+
+> Code
+
+なので、この下の関数のように Task クラスを使っても、実質的な処理は変わりません。
+
+---
+
+Coroutine とのアナロジーを考えるとメソッドを使った切り替えも悪くないんですけどねー。
+
+個人的には Task を使った方が、処理の切り分けが分かりやすいかなと思います。
+
+---
+
+> Camera
+
+というわけで、 Unity 側で async/await 対応は進められているものの、既にサードパーティーソリューションを使っている方からすれば、あんまり状況は変わらないかもしれません。
+
+---
+
+無理に Awaitable に移行しなくてもいいかな…って感じですね。
+
+ただ重要なのは、Unity エンジン内で async/await 対応していく下地がこれでできた、ということです。
+
+---
+
+今回紹介した GPU Readback API は、既存の API を async/await で改良したケースですが、今後は最初から async/await を前提として API を設計・開発するケースが増えていくと思います。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
