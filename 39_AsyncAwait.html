@@ -70,7 +70,7 @@ WaitForSeconds を “yield return” して１秒間待ったり、null を “
 
 WaitForSecondsAsync を使って１秒間待ったり、NextFrameAsync を使って次のフレームを待ったりできます。
 
-これだけだと coroutine と比べてそんなに便利そうに見えないかもしれませんが、この時点でも有利な点はいくつかあります。
+これだけだと coroutine と比べてそんなに便利そうに見えないかもしれませんが、この時点でも有利な点はあります。
 
 ---
 
@@ -82,7 +82,7 @@ WaitForSecondsAsync を使って１秒間待ったり、NextFrameAsync を使っ
 
 > Demo: UI callback
 
-つまり、UI などのコールバックとして登録することもできるということですね。
+つまり、UI のコールバックなどでも使えるということですね。
 
 UI のリアクションの中で時間経過を扱うことも簡単にできます。
 
@@ -102,7 +102,7 @@ UI のリアクションの中で時間経過を扱うことも簡単にでき�
 
 > Code
 
-従来この API は、GPU からのデータ読み出し完了の通知を、コールバック関数で受け取っていました。
+従来この API は、読み出し完了の通知を、コールバック関数で受け取っていました。
 
 こんな感じのコードですね。
 
@@ -162,7 +162,7 @@ Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２
 
 ---
 
-簡単に実装できるんですが、このエンコードの処理とファイル書き込みの処理は、結構時間がかかります。
+簡単に実装できるんですが、このエンコードとファイル書き込みの処理は、結構時間がかかります。
 
 ---
 
@@ -198,13 +198,13 @@ Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２
 
 > Camera
 
-もうひとつ、これは Unity 2022.2 の時点で行われていたことですが、Unity の API に cancellation token が追加されています。
+最後に紹介したいのは cancellation token です。
 
 ---
 
 > Screenshot: Script reference
 
-具体的には、MonoBehaviour に destroyCancellationToken や、Application に exitCancellationToken が実装されています。
+Unity 2022.2 において、MonoBehaviour に destroyCancellationToken が、Application に exitCancellationToken が実装されました。
 
 ---
 
@@ -222,17 +222,15 @@ Unity 上の game object の破棄や、アプリの終了をトリガーとし�
 
 > Camera
 
-こんな感じで Unity の async/await 対応は着々と進められていますが、残念ながらまだ完成というわけではない、というのが正直な所です。
-
----
+こんな感じで Unity の async/await 対応は着々と進められていますが、残念ながらまだ問題は残されています。
 
 例えば GC Allocation の問題があります。
 
 ---
 
-> Screenshot: Awaitable manual
+> Screenshot: [Forum thread](https://forum.unity.com/threads/unity-future-net-development-status.1092205/page-27#post-8597608)
 
-Awaitable クラスではオブジェクトプールを使ってオブジェクトの使い回しを行っていますが、これは await を行った場合のみ、と言う制限が付いています。
+Awaitable クラスではオブジェクトプールを使ってオブジェクトの再利用を行っていますが、これは await を行った場合のみ、と言う制約が付いています。
 
 ---
 
@@ -264,23 +262,41 @@ GC Allocation が発生し続けることになります。
 
 Coroutine とのアナロジーを考えるとメソッドを使った切り替えも悪くないんですけどねー。
 
-個人的には Task を使った方が、処理の切り分けが分かりやすいかなと思います。
+個人的には Task を使った方が、処理の流れが分かりやすいかなと思っています。
 
 ---
 
 > Camera
 
-というわけで、 Unity 側で async/await 対応は進められているものの、既にサードパーティーソリューションを使っている方からすれば、あんまり状況は変わらないかもしれません。
+というわけで、 Unity 側で async/await 対応は進められているものの、既にサードパーティーソリューションを使っている方からすれば、あんまり状況は変わらないのかもしれません。
 
 ---
 
-無理に Awaitable に移行しなくてもいいかな…って感じですね。
-
-ただ重要なのは、Unity エンジン内で async/await 対応していく下地がこれでできた、ということです。
+ただ重要なのは、Unity エンジン内で async/await 対応していく下地がこれで整った、ということですね。
 
 ---
 
 今回紹介した GPU Readback API は、既存の API を async/await で改良したケースですが、今後は最初から async/await を前提として API を設計・開発するケースが増えていくと思います。
+
+---
+
+今回はこんな感じで async/await について解説しましたが、いかがでしたでしょうか？
+
+---
+
+長々とお話ししましたが、既に async/await を使っている方にしてみれば、まあそのまま使い続ければ OK って感じですよね。
+
+これから Unity 側に async 対応の API が増えていくことで、より使いやすくなるんだと思います。
+
+---
+
+なので現時点では「これをこう使うべき」みたいな分かりやすい結論は無いんですが、現状と方向性が何となく伝われば幸いです。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
