@@ -36,7 +36,7 @@
 
 ---
 
-> Screenshot: Reference manual
+> Screenshot: [Awaitable class reference](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Awaitable.html)
 
 まず、最初に触れておきたいのは Awaitable クラスについてです。
 
@@ -44,7 +44,7 @@
 
 ---
 
-> B-roll: Web pages
+> B-roll: Web pages [1](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.task?view=netstandard-2.1) [2](https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.valuetask?view=netstandard-2.1)
 
 通常、.NET の async/await では Task や ValueTask が使われると思いますが、Unity では Awaitable が async/await の基本となります。
 
@@ -74,13 +74,13 @@ WaitForSecondsAsync を使って１秒間待ったり、NextFrameAsync を使っ
 
 ---
 
-> B-roll: UnityEvent class reference
+> B-roll: [UnityEvent class reference](https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html)
 
 例えば async void 関数は単なる void 関数として扱うこともできるので、UnityEvent に登録することができます。
 
 ---
 
-> Demo: UI callback
+> Demo: UI reaction
 
 つまり、UI のコールバックなどでも使えるということですね。
 
@@ -94,7 +94,7 @@ UI のリアクションの中で時間経過を扱うことも簡単にでき�
 
 ---
 
-> [AsyncGPUReadback](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Rendering.AsyncGPUReadback.html)
+> Screenshot: [AsyncGPUReadback](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Rendering.AsyncGPUReadback.html)
 
 例えばこの AsyncGPUReadback という、GPU からデータを読み出すためのクラスがあるんですが、これに “Async” バージョンが追加されています。
 
@@ -116,7 +116,7 @@ UI のリアクションの中で時間経過を扱うことも簡単にでき�
 
 ここで特定したフレーム番号を、ここで使いたいんですが……
 
-うーん、こんな感じには書けませんよね。
+えーっと、こんな感じには書けませんよね。
 
 ---
 
@@ -144,7 +144,7 @@ UI のリアクションの中で時間経過を扱うことも簡単にでき�
 
 ---
 
-> Screenshot: Scripting reference
+> Screenshot: [Awaitable class reference](https://docs.unity3d.com/2023.1/Documentation/ScriptReference/Awaitable.html)
 
 Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２つのメソッドが用意されています。
 
@@ -186,11 +186,11 @@ Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２
 
 > Camera
 
-ただし、Unity の API のほとんどはバックグラウンドスレッドで動かすことができないので注意してください。
+ただし、Unity の API のほとんどはバックグラウンドスレッドで使うことができないので注意してください。
 
 ---
 
-> Screenshot: Scripting reference
+> Screenshot: [ImageConversion class reference](https://docs.unity3d.com/ScriptReference/ImageConversion.EncodeArrayToPNG.html)
 
 ここで使用している ImageConversion クラスは特別にスレッドセーフ対応されているので、このような使い方ができます。
 
@@ -202,7 +202,7 @@ Awaitable クラスには BackgroundThreadAsync と MainThreadAsync という２
 
 ---
 
-> Screenshot: Script reference
+> Screenshot: Cancellation token reference [1](), [2]()
 
 Unity 2022.2 において、MonoBehaviour に destroyCancellationToken が、Application に exitCancellationToken が実装されました。
 
@@ -214,7 +214,7 @@ Cancellation token というのは、async/await を使った非同期処理の�
 
 ---
 
-> B-roll: Script reference page
+> B-roll: [](Script reference page)
 
 Unity 上の game object の破棄や、アプリの終了をトリガーとして非同期処理を中断したい場合に、これらの cancellation token が使えます。
 
@@ -222,7 +222,7 @@ Unity 上の game object の破棄や、アプリの終了をトリガーとし�
 
 > Camera
 
-こんな感じで Unity の async/await 対応は着々と進められていますが、残念ながらまだ問題は残されています。
+こんな感じで Unity の async/await 対応は着々と進められていますが、残念ながらまだ問題も残されています。
 
 例えば GC Allocation の問題があります。
 
