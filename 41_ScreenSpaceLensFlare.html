@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>41 Screen Space Lens Flare</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは Screen Space Lens Flare です。
+
+---
+
+> Camera
+
+今回紹介するのは Unity 2023.1 の URP とHDRP に追加された新機能、Screen Space Lens Flare です。
+
+説明の前に、まずはどんなエフェクトなのか見てもらいましょう。
+
+---
+
+> Demo 1
+
+これは単純なパーティクルエフェクトですが、これに Screen Space Lens Flare を追加すると…こうなります。
+
+だいぶ煌びやかな表現になりますね。
+
+---
+
+> Demo 2
+
+これは別のサンプルです。
+
+これも Screen Space Lens Flare を追加すると…こうなります。
+
+---
+
+> Camera
+
+こんな感じで、Screen Space Lens Flare は光の表現を強化することができます。
+
+---
+
+ちなみに Screen Space Lens Flare は URP と HDRP の両方で使えますが、今回のサンプルは全て URP で作成しています。
+
+---
+
+さて Lens Flare の機能は以前から URP/HDRP にあったわけですが、それは光源に対して追加するエフェクトでした。
+
+---
+
+> Editor
+
+細かいオプションが設定できる反面、量を増やすのは難しいという弱点がありました。
+
+---
+
+> Demo
+
+光源以外の物体が光る場合に対応できないという弱点もあります。
+
+---
+
+> Camera
+
+Screen Space Lens Flare は、従来の Lens Flare とは違って、post-processing effect として実装されています。
+
+---
+
+細かいオーサリングはできませんが、画面上の光る物体なら何でも対応できるという長所があります。
+
+---
+
+> Demo
+
+この最初のサンプルのように、発光するパーティクルが沢山存在するシーンでも、無理なく対応できるわけですね。
+
+---
+
+> Camera
+
+URP 12 の時に作ったデモがあるんですが、試しに Screen Space Lens Flare を追加してみました。
+
+ちょっとご覧ください。
+
+---
+
+こんな感じでキラキラ光る要素がたくさんあるシーンでは、Screen Space Lens Flare が有効的に使えますね。
+
+---
+
+> Comparison video
+
+従来の Lens Flare を使った場合と並べて比較してみました。
+
+---
+
+こういう、暗めのシーンで発光する物体がたくさん現れる場合は、やっぱり Screen Space Lens Flare の方が有利だと思います。
+
+---
+
+> Demo
+
+逆に、屋外シーンにおける太陽光のように、支配的な光源が数個だけ存在する場合は、従来の Lens Flare の方が得意だと思います。
+
+---
+
+> Camera
+
+適材適所で上手く使い分けてください。
+
+---
+
+> Editor: Volume profile
+
+Screen Space Lens Flare の設定について簡単に説明しておきます。
+
+---
+
+Screen Space Lans Flare は他の post-processing effects と同じく、volume profile を使って設定します。
+
+---
+
+> Editor: Adding Bloom
+
+まず最初に注意する必要があるのは、Bloom と同時に使用しなければいけないという点です。
+
+---
+
+これは、一部の処理が Bloom と共有されているためです。
+
+あらかじめ Bloom の設定を済ませておくようにしてください。
+
+---
+
+> Editor: Lens Flare settings
+
+Screen Space Lens Flare を追加したら、 Intensity で強さを変更できます。
+
+Tint Color で色味を変えたり、 Bloom Mip Bias で柔らかさを変えたりできます。
+
+---
+
+> Editor: Further Lens Flare settings
+
+フレアの構成要素は４つ用意されています。
+
+---
+
+まずは “Regular” フレア。
+
+光源の外側に出るフレアです。
+
+---
+
+次は “Reversed” フレア。
+
+光源とは反対方向に出るフレアです。
+
+---
+
+次は “Warped” フレア。
+
+周辺に回り込む形で現れるフレアです。
+
+---
+
+そして、最後が “Streaks”。
+
+横方向に鋭く延びる光の筋です。
+
+Length パラメーターを使って長さを調整できます。
+
+---
+
+これは、いわゆる anamorphic lens flare を模したものですね。
+
+正確なシミュレーションではないんですが、まあ手軽にカッコ良さを演出できるエフェクトだと思います。
+
+---
+
+> Camera
+
+この他にも細かい項目があるんですが、とりあえず、今紹介したパラメーターだけでも十分に見た目の調整が行えると思います。
+
+---
+
+まずはここから始めてみることをお勧めします。
+
+---
+
+今回はこんな感じで Screen Space Lens Flare について解説しましたが、いかがでしたでしょうか？
+
+今まで URP で画面を派手に光らせたい、と思ったら、まず Bloom を使っていたと思うんですが、そこへ更に強力な道具が追加された感じですね。
+
+---
+
+あんまり調子に乗って使い過ぎると、画面が白く飽和しちゃうとか、見た目が安っぽくなっちゃうとかあるので、注意は必要だと思います。
+
+それでも、ライティング表現の複雑度を手軽に底上げすることができるっていうのはありがたいですよね。
+
+---
+
+使い過ぎには注意しつつ有効活用していってください。
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
