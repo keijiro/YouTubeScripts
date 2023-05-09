@@ -300,6 +300,12 @@ ComputeTensorData は Compute Buffer を使ってデータを格納するため�
 
 今回はこのように明示的にデータ領域を指定することで、GPU 側のメモリを使用します。
 
+ChannelsOrder は Compute Buffer 上での要素の並び順を指定するオプションです。
+
+画像処理の場合は大抵 NHWC を使うことになると思ってください。
+
+---
+
 次に、入力画像を tensor へコピーするための compute shader を実行します。
 
 Compute shader の中身はこんな感じです。
@@ -319,6 +325,12 @@ Compute shader の中身はこんな感じです。
 入力 tensor が用意できたら、worker instance を作成して、実行します。
 
 今回は GPU で実行することが前提なので、worker の種類として GPU を指定しました。
+
+---
+
+今回は inference の結果も compute buffer として参照したいと思います。
+
+そのため、出力 tensor のデータ領域を tensorOnDevice プロパティで参照し、ComputeTensorData にダウンキャストする、という方法を使っています。
 
 ---
 
