@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>42 Leaked Managed Shell</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは Leaked Managed Shell です。
+
+---
+
+今回お話しする “Leaked Managed Shell” というのは、Unity においてメモリリークのような現象が発生することがある、というものです。
+
+---
+
+> B-Roll
+
+みなさんご存知の通り、Unity で使用されている C# 言語では、基本的にメモリ管理を手動で行う必要はありません。
+
+---
+
+Garbage collection によって、自動的に管理されることになっています。
+
+---
+
+> Camera
+
+ただ実際には、Unity というゲームエンジンを動かしているのは C# で書かれたコードだけではありません。
+
+ゲームエンジン内部の大部分は C++ で書かれています。
+
+---
+
+> Figure
+
+つまり、C# で書かれた managed code と、C++ で書かれたネイティブコードが協調して動いています。
+
+---
+
+この２つが不整合を起こすと、不要なメモリが確保され続けてしまう可能性があります。
+
+---
+
+> Camera
+
+その一例が、今回紹介する Leaked Managed Shell です。
+
+---
+
+> Code
+
+まず、簡単な例を見てみましょう。
+
+Texture2D オブジェクトを作成して、その後 Destroy するだけの単純な C# コードです。
+
+---
+
+> Figure
+
+ここに登場するのは、Texture2D というオブジェクト、たったひとつだけのように見えますね。
+
+---
+
+ただ実際には、C++ で書かれたネイティブコード側の Texture2D オブジェクトというものが存在していて、これが実質的な処理を担当しています。
+
+---
+
+C# 側の Texture2D オブジェクトは、いわゆる wrapper に過ぎない、というわけですね。
+
+というわけで、この短いコードには、実は登場人物が２つ存在しています。
+
+---
+
+ひとつは C# 側の wrapper object。
+
+これは “Managed Shell” と呼ぶことにしましょう。
+
+もうひとつは native object の Texture2D です。
+
+---
+
+Managed shell が作られると、その中で native object も作られます。
+
+そして Destroy メソッドを呼ぶと、その中で native object は破棄されます。
+
+---
+
+さて、これで全部片付いたように見えるかもしれませんが…実はまだ終わっていません。
+
+---
+
+この managed shell はまだ破棄されていません。
+
+実はまだ生きているんです。
+
+これを leaked managed shell と呼びます。
+
+---
+
+> Code
+
+この managed shell を破棄するには、ちゃんと null を代入して、ガベージコレクションを待つ必要があります。
+
+---
+
+でも、ここで変数 tex を Debug.Log でプリントすると、 null が表示されるんですよね。
+
+null と比較チェックしてみても、やはり true が返ってきます。
+
+---
+
+じゃあ別にわざわざ null を代入しなくてもいいんじゃないの？って思いますよね。
+
+これが Unity の C# プログラミングにおける悪名高い落とし穴のひとつです。
+
+---
+
+見かけ上 null を返しているだけで、実際にはまだ Unity Object インスタンスが存在しているんですよね。
+
+---
+
+> GitHub reference code
+
+これは Unity Object クラスにおいて比較演算子などをオーバーロード定義することで実現されています。
+
+null に見えるけど、本当は null じゃない、っていう状態です。
+
+---
+
+> Code
+
+だから、null に見えるけど、そこに改めて null を代入する、というのは、意味のあることなんです。
+
+---
+
+> B-Roll: Blog article
+
+余談になりますが、この特殊な仕様は、まあ評判が悪くて、修正が検討されたこともあります。
+
+---
+
+ただ残念ながら、Unity の根本的な設計に影響するため、副作用を出さずに修正するというのは、非常に難しいです。
+
+当面の間は、この仕様は存在するものとして付き合っていく必要があります。
+
+---
+
+> Camera
+
+さて、Leaked Managed Shell の話に戻りましょう。
+
+---
+
+> B-Roll: Memory Profiler
+
+Unity の新機能のひとつである Memory Profiler のバージョン 1.1 では、この leaked managed shell を確認するための機能が追加されています。
+
+---
+
+これを使って実際にリークを確認してみましょう。
+
+---
+
+> Editor
+
+簡単なサンプルを用意しました。
+
+Prefab を大量に Instantiate して、数秒待ってから、Destroy するだけの内容です。
+
+---
+
+> Code
+
+ただし、このサンプルでは敢えて手を抜いてみました。
+
+Destroy したあとに、List をクリアせずに、そのまま残しています。
+
+---
+
+こうすると、native object は破棄されているけど、managed shell は残り続ける、という状態になります。
+
+---
+
+> Editor
+
+これを実行してから、 Memory Profiler で snapshot を取ります。
+
+そして ”All Of Memory” タブを開きます。
+
+---
+
+この検索ボックスに “leaked” と入力すると、このように leaked managed shell を列挙することができます。
+
+こうして見てみると、MyComponent の managed shell がしっかり残ってしまっているのが分かりますね。
+
+---
+
+ただ、メモリ容量としてはそれほど大きくないように見えます。
+
+このように、leaked managed shell そのものによって占有されるメモリの容量はそれほど大きくはありません。
+
+---
+
+> Camra
+
+怖いのは、leaked managed shell と連動して、更なる大きなリークが発生している場合です。
+
+---
+
+> Code
+
+例えば、この MyComponent クラスでは、内部でテクスチャを動的生成しています。
+
+---
+
+つまり、この C# コードの中で、大きな配列と Texture2D オブジェクトを生成しています。
+
+しかも、ここでも手を抜いてしまっています。
+
+配列もテクスチャも使いっぱなしで放置しています。
+
+---
+
+> Camera
+
+Leaked managed shell と化した MyComponent が保持している配列やテクスチャは、システム側から見れば、まだ使用中のオブジェクトです。
+
+---
+
+Garbage collection や UnloadUnusedAssets が呼ばれても、解放されることはありません。
+
+---
+
+> Editor
+
+Memory Profiler を覗いてみると、このように大量の配列やテクスチャが残っているのが分かりますね。
+
+---
+
+“Referenced By” を見てると、 leaked managed shell から参照されていることが分かります。
+
+結果として、このプロジェクトは、大量のメモリをリークしてしまっていることが分かりました。
+
+---
+
+> Camera
+
+いかがでしょうか？
+
+これが、Garbage Collection が働いていてもメモリリークが発生する、という仕組みです。
+
+---
+
+このような問題に対処するには、普段から意識して参照やオブジェクトの破棄を行うのが良いと思います。
+
+---
+
+> Code
+
+例えば今回の例では、ここで List を Clear していないことがそもそもの過ちです。
+
+---
+
+変数による参照を行なっている場合では、Destroy 後に、明示的に null を代入するのが良いでしょう。
+
+---
+
+ついでに MyComponent の実装も直します。
+
+このクラスでは、OnDestroy を実装して、テクスチャを明示的に Destroy するのが良いでしょう。
+
+---
+
+配列については、純粋な managed object なので、わざわざ null を入れなくてもいいかなと思います。
+
+でもまあ、入れた方がお行儀はいいのかもしれませんね。
+
+---
+
+> Editor
+
+修正後の挙動を確認してみましょう。
+
+実行して、破棄を待ってから、 Memory Profiler で確認します。
+
+---
+
+Leaked Managed Shell がいくつか検出されますが、こちらで作ったものは無さそうですね。
+
+大量の配列やテクスチャも無くなりました。
+
+これでメモリは健全な状態になったと思います。
+
+---
+
+> Camera
+
+こんな感じで今回は Leaked Managed Shell について解説しましたが、いかがでしたでしょうか。
+
+---
+
+実は、今回の本当のメイントピックは Memory Profiler の新機能についてでした。
+
+その説明の過程で Leaked Managed Shell が発生する仕組みについて触れたという感じです。
+
+---
+
+小規模なプロジェクトではこの手の問題が顕在化することは殆ど無いと思うんですけどね。
+
+複雑なアプリを構築すると、どうしても生存期間の長いオブジェクトというものが現れてきます。
+
+---
+
+シーン切り替え時に Destroy されない属性を持ったシステムオブジェクトなどですね。
+
+そういったオブジェクトが長期間 leaked managed shell を握ってしまうと、メモリ不足を招く危険性があります。
+
+---
+
+長時間アプリを動かした時だけ発生するという、検証のめんどくさい問題ですね。
+
+そのような場合に、この Memory Profiler の機能と Leaked Managed Shell のことを思い出してみてください。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
