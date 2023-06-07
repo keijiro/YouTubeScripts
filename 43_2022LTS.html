@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>43 2022 LTS</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは Unity 2022 LTS です。
+
+---
+
+Unity 2022 LTS が６月１日にリリースされました。
+
+---
+
+> Web: LTS explanation
+
+LTS とは Long Time Support の略で、１年に１度リリースされる長期サポートバージョンです。
+
+---
+
+Unity のバージョンを固定して開発を行いたい場合に便利なバージョンです。
+
+---
+
+> Camera
+
+この動画では、その Unity 2022 LTS の注目ポイントを解説していきたいと思います。
+
+---
+
+> Figure
+
+とは言っても、2022 LTS は、2022.3 というバージョン番号からも分かるように、基本的には 2022.2 の更新版となっています。
+
+---
+
+Unity 2022 の Tech Stream を使っていた方にしてみれば、あれがそのまま LTS になった、という理解で OK です。
+
+---
+
+> Camera
+
+さて、何といっても注目なのは、Entity Component System (ECS) が正式リリースされたことです。
+
+---
+
+> B-rolls: ECS
+
+ECS は "DOTS" という通称で覚えている方もいるかもしれませんね。
+
+ハイパフォーマンスなゲーム開発のためのフレームワークです。
+
+---
+
+長らく開発していた ECS ですが、バージョン 1.0 が、この 2022 LTS の上で動きます。
+
+ECS を試してみたい、という場合には、この LTS がお勧めのバージョンになります。
+
+---
+
+> Camera
+
+この ECS については、この動画の中ではとても話しきれないので、また別の機会に取り上げたいと思います。
+
+---
+
+次に目を引く更新としては、グラフィックス関連の新機能が挙げられます。
+
+---
+
+> Web: YouTube channel
+
+これらの機能については、このチャンネルでも色々取り上げてきました。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=Un9cwj2ZiE0)
+
+例えばマテリアルのオーサリングに関する新機能 Material Variant が新たに使えるようになっています。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=7Cd7kQl6N50)
+
+URP, HDRP 共通の新機能としては Fullscreen Material があります。
+
+フルスクリーンエフェクトを Shader Graph で制作するための機能ですね。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=zWxoBz1Pav8)
+
+URP の新機能としては LOD Crossfading などがありました。
+
+LOD モデルを滑らかに補間するための機能です。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=5ouHEAYxKl8)
+
+HDRP の新機能としては Volumetric Material などがありましたね。
+
+煙や霧などの表現を Shader Graph で制作するための機能でした。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=319HikAOC3g)
+
+また、VFX Graph における Six-Way Lighting の対応もありました。
+
+特殊なノーマルマップを用意することで立体感のある煙表現を可能にする機能でした。
+
+---
+
+> Camera
+
+もちろん、グラフィクス以外の新機能もあります。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=5IrKqVnvP6M)
+
+Editor 上で spline の編集ができるようになったのは、嬉しい追加でした。
+
+単に曲線を描くだけでなく、オブジェクトの配置などにも使える強力な新機能です。
+
+---
+
+> [Video card](https://www.youtube.com/watch?v=FtYtM3q-pEY)
+
+Physics の更新もありました。
+
+大きな新機能はありませんが、細かい所で使い勝手の向上する更新が行われています。
+
+こちらの動画で解説していますね。
+
+---
+
+> Blog article
+
+他にも公式ブログ記事の方で新機能を色々紹介しています。
+
+興味のある方はチェックしてみてください。
+
+---
+
+> Camera
+
+さて、このように色んな新機能のある Unity 2022 LTS ですが、既存のプロジェクトをアップグレードする際にはいくつか注意点があります。
+
+---
+
+> [Upgrade guide](https://docs.unity3d.com/2022.3/Documentation/Manual/UpgradeGuide2022LTS.html)
+
+Unity マニュアルの Upgrade Guide のページに、これらの注意点がまとめられています。
+
+---
+
+細かい点が多いので、ここでは全部紹介しませんが、実際にアップグレード作業を行う際には、一度目を通してみてください。
+
+---
+
+影響の大きそうな点だけピックアップしてみると……例えば Lightmap UV の変更があります。
+
+モデルのインポート時に Lightmap UV を生成している場合は、これが変化する可能性があります。
+
+---
+
+ライトマップが壊れてしまう可能性があるということですね。
+
+もし、ライトマップが壊れた場合は、ベイクをし直す必要があります。
+
+---
+
+また、Enlighten を使ったライトマップのベイクは deprecated となりました。
+
+Progressive Lightmapper への移行が自動的に行われます。
+
+---
+
+どうしても Enlighten を使いたい場合は、Project Settings からこれを復活させることもできます。
+
+でも、この方法が使えるのは 2022 LTS までです。
+
+2023 からは完全に使えなくなっているので注意してください。
+
+---
+
+あとは、Android における Gradle template の変更なども、関係する方は多いかもしれませんね。
+
+Custom template を使っている場合は更新が必要になると思います。
+
+---
+
+> SRP upgrade guides, [URP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@14.0/manual/upgrade-guide-2022-2.html)/[HDRP](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@14.0/manual/Upgrading-from-2022.1-to-2022.2.html)
+
+このような upgrade guide は URP や HDRP にも、それぞれ用意されています。
+
+---
+
+ほとんどの場合はそのままアップグレードできると思いますが、カスタムスクリプトやカスタムシェーダーを書いている場合は、注意が必要かもしれません。
+
+そのような場合はこれらのページを参考にしてください。
+
+---
+
+こんな感じで今回は Unity 2022 LTS について解説してきましたが、いかがでしたでしょうか？
+
+---
+
+Unity の新機能については、このチャンネルで随時紹介していますが、LTS をメインに使っている場合は、なかなか試すことができなかったかもしれませんね。
+
+ぜひ、この LTS で新機能に触れてみてください。
+
+---
+
+また、Tech Stream を使っていても、ECS は試したことが無いという方が多いんじゃないでしょうか。
+
+ECS は技術的に面白いトピックなので、またの機会にじっくりと触れてみたいですね。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
