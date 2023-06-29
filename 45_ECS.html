@@ -176,7 +176,7 @@ Strawman という名前のオブジェクトです。
 
 DancerAuthoring スクリプトの中身を見てみましょう。
 
-まず、IComponentData を継承した Dancer という struct があります。
+まず、IComponentData を実装した Dancer という struct があります。
 
 ---
 
@@ -219,7 +219,7 @@ Unity Editor 上で設定された値を Dancer コンポーネントに変換�
 
 ---
 
-ISystem を継承した struct として DancerSystem が実装されています。
+ISystem を実装した struct として DancerSystem が定義されています。
 
 ちょっと注意なんですが、この struct には partial キーワードが付けられています。
 
