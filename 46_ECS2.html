@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>46 ECS 2</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+今回はパフォーマンスの話に切り込んでみたいと思います。
+
+前回は人形たった３体だけを動かすデモでしたが、これを一気に 5,000 体にまで増やしてみましょう。
+
+---
+
+と、その前に、最初に言い訳をしておきたいと思います。
+
+恐らく今回この動画を見て、みなさんこんな感想を持つかもしれません。
+
+なんで同じことを実現するのに複数のアプローチが用意されているんだろう？
+
+どれを選んだらいいのか分からないぞ？
+
+今の内に結論を行っておきますが、その疑問は正しいものです。
+
+そういう分かりにくさがあるので、最初のチュートリアルではパフォーマンスの話に踏み込まなかったんですね。
+
+そのような疑問は一旦抑え込んで、最後まで付いて来てください。
+
+
+
+
+それではまず、5,000 対の人形を生成する処理から作りましょうか。
+
+当然、 5,000 対を手作業で配置するわけにはいきませんから、プログラムで生成します。
+
+ECS でも通常の Unity と同じように prefab が使えます。
+
+使い方もほぼ同じです。
+
+Hierarchy から Project View にドラッグ&ドロップで、簡単に prefab が作れます。
+
+この prefab を設定するための、Config コンポーネントを作ることにしたいと思います。
+
+ついでに、生成する個数や範囲についても、この中で設定できるようにします。
+
+ConfigAuthoring スクリプトの中身はこんな感じです。
+
+ECS で prefab は Entity 型の値として保持できます。
+
+Authoring クラスの中では、普通に GameObject の参照として保持していますね。
+
+そして　Bake メソッドの中で、GetEntity メソッドを使って、GameObject への参照を Entity 型の値へと変換しています。
+
+このように、Baker クラスの GetEntity メソッドを使うことで、GameObject の prefab を ECS のエンティティへと変換することができます。
+
+さて次は、この Config コンポーネントの設定に基づいてインスタンスを生成するスクリプトを書きましょう。
+
+名前は SpawnSystem としました。
+
+前回のチュートリアルでは、システムの実装は ISystem を実装した struct を使ってました。
+
+しかし今回は、
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
