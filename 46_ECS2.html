@@ -164,16 +164,6 @@ Instantiate メソッドには、元になる prefab と、生成するインス
 
 ---
 
-Instantiate メソッドは、生成したエンティティを NativeArray に格納して返します。
-
-この Allocator.Temp は、その NativeArray のアロケーターを指定するものです。
-
----
-
-このスコープ内でのみ参照するのであれば、Allocator.Temp で問題無いでしょう。
-
----
-
 次は、Config に設定された乱数シードを使って、各インスタンスの位置やパラメーターをランダムに変えていきます。
 
 SystemAPI の GetComponentnRW を使うことで、各コンポーネントへのアクセサを取得できます。
