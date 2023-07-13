@@ -352,18 +352,6 @@ IJobEntity では、この Execute メソッドの実装が Query の代わり�
 
 ---
 
-元のソースコードでは、コンポーネントの参照に RefRO や RefRW を使っていました。
-
-IJobEntity では引数に "in" や "ref" のキーワードを付けることで対応できます。
-
----
-
-値を参照する際に必要だった ValueRO や ValueRW という表記も必要無くなります。
-
-個人的には、IJobEntity の方がすっきりとした書き方になるので好きですね。
-
----
-
 あとの処理の中身は殆ど同じです。
 
 ---
@@ -371,8 +359,6 @@ IJobEntity では引数に "in" や "ref" のキーワードを付けること�
 > Code: DancerSystem.OnUpdate
 
 次に、このジョブを発行する処理を OnUpdate に記述します。
-
-こんな感じです。
 
 ---
 
