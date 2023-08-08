@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>47 Unity Physics</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+Unity Physics とは ECS 用に新設計された物理エンジンです。
+
+C# 言語で実装されていて、Burst Compiler によって高速動作するというものになっています。
+
+また、ステートレスな設計になっていて、挙動の再現性が高い、などの特徴もあるんですが、そういった細かい所はまた後で触れたいと思います。
+
+ちなみに、Unity Physics と対になる Havok Physics という実装も存在するんですが、これはまた別の機会に触れましょう。
+
+
+
+
+
+さてそれでは、早速 Unity Physics を使ってみたいと思います。
+
+基本的な使い方は、今までの PhysX とほとんど変わりありません。
+
+Subscene の中で Collider や Rigidbody などのコンポーネントを使えば、自動的に Unity Physics のコンポーネントとしてベイクされます。
+
+
+
+また、これらの標準のコンポーネントとは別に、Unity Physics 専用のオーサリング・コンポーネントも用意されています。
+
+これについては、今回は解説しませんが、興味のある方はサンプルプロジェクトを参照してみてください。
+
+
+
+さて、ECS 上で Physics を使っていくにあたって、やっぱり気になるのはパフォーマンスだと思います。
+
+C# を使った実装で、本当に実用的な速度が出るのか気になりますよね。
+
+簡単なベンチマークを作って、従来の PhysX と比較してみました。
+
+結果としては、まあだいたい、従来の PhysX と同程度の速度、と言ったところだと思います。
+
+従来よりも、速いところもあれば、遅いところもあり、平均すると同じぐらい…と言う感じでしょうか。
+
+ただ、１フレーム内で複数回の Fixed Update が発生するようなケースにおいては、Unity Physics の方が明確に遅くなりました。
+
+恐らくですが、Unity Physics のステートレスな設計がディスアドバンテージになっていると考えられます。
+
+ステートレスなので、２回シミュレーションを行うと、本当に２倍の時間がかかってしまうんですよね。
+
+
+
+スクリプトから操作する方法についても、少し触れておきたいと思います。
+
+簡単なサンプルとして、こんなのを作ってみました。
+
+この緑の領域に触れると、上方向に加速する、というものです。
+
+従来の PhysX で言うと、いわゆる Trigger を使った処理となりますね。
+
+これを ECS と Unity Physics の組み合わせで実装すると、どんな感じになるんでしょうか。
+
+
+ソースコードを見てみましょう。
+
+この処理は BlowerSystem というクラスに実装しました。
+
+UpdateInGroup アトリビュートを使って、AfterPhysicsSystemGroup の中で実行するようになっていますね。
+
+Unity Physics でコリジョン判定の結果を使う場合は、Physics の後に実行する必要があるので、こうしています。
+
+Update の中では、ジョブの準備と実行だけを行っています。
+
+この部分の説明は省略します。
+
+
+本体となるのは、このジョブの実装の方ですね。
+
+Trigger のイベントを処理する専用のインターフェースとして ITriggerEventsJob を使用します。
+
+この ComponentLookup は、トリガーに接触したエンティティからコンポーネントを参照するのに使用します。
+
+この Execute メソッドは、各トリガーイベントに対して１回ずつ実行されます。
+
+処理の内容としては、まず、処理対象を限定するためのフィルタリングを行っています。
+
+
+
+
+
+
+
+
+
+
+
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
