@@ -120,7 +120,7 @@ C# を使った実装で、本当に実用的な速度が出るのか気にな�
 
 > Profiler
 
-ただ、１フレーム内で複数の Fixed Update が発生するようなケースにおいては、Unity Physics の方が不利になりました。
+ただ、１フレーム内で複数回の Fixed Update が発生するようなケースにおいては、Unity Physics の方が不利になりました。
 
 ---
 
@@ -216,7 +216,7 @@ BurstCompile を外すと、30 ms もかかるようになってしまいまし�
 
 ソースコードを見てみましょう。
 
-この処理は BlowerSystem というクラスに実装しました。
+この処理は BlowerSystem という struct に実装しました。
 
 ---
 
