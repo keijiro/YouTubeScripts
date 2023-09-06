@@ -19,95 +19,280 @@
 <textarea id="source">
 
 Character Controller は ECS 用に開発されたパッケージの一つです。
+
 ここで言うキャラクター・コントローラーというのは、物理システムとキャラクターの間の相互干渉を処理するシステムですね。
+
+---
+
+> Browser: [Standard Character Controller](https://docs.unity3d.com/ScriptReference/CharacterController.html)
+
 Unity には従来から CharacterController というコンポーネントが存在していました。
+
+---
+
+> Browser: [Character Controller package](https://docs.unity3d.com/Packages/com.unity.charactercontroller@latest)
+
 これと同じような機能を ECS 上で提供するのが、今回紹介する Character Controller パッケージです。
 
+---
+
+> Camera
+
 早速ですが、公式サンプルプロジェクトを覗いてみましょう。
-これは Platformer という名前のサンプルプロジェクトです。
+
+---
+
+> Browser: [Sample repository](https://github.com/Unity-Technologies/CharacterControllerSamples)
+
+こちらの GitHub リポジトリにあります。
+
+マニュアルからリンクされていますが、いちおう概要欄からもリンクしておきますね。
+
+---
+
+> Demo: Platformer
+
+このリポジトリには、いくつかのプロジェクトが含まれています。
+
+これは、その中にある Platformer という名前のサンプルプロジェクトです。
+
+---
+
 名前の通り、いわゆるプラットフォーム・ゲームを実装したものですね。
 
 歩いたり、走ったり、ジャンプしたり、ダブルジャンプしたり…というような一通りの動作ができます。
+
 もちろん、プラットフォームに乗って移動することもできます。
+
+---
+
 壁を登ったり、壁を走ったり、ジャンプパッドで空を飛んだり…というような、少し特殊なアクションも実装されています。
 
+---
+
 どうでしょうか？
-簡単なゲームなら、これをベースに開発できそうだ、という気がしてきませんかね？
+
+簡単なゲームなら、これをベースに開発できそうだ、という気がしてきますね。
+
+---
+
+> Browser: [Forum Rival thread](https://forum.unity.com/threads/released-rival-dots-character-controller.1118761/)
 
 この Character Controller パッケージは、元は “Rival” と言う名前で開発されていました。
+
+---
+
 この開発者は、今は Unity に加わっています。
+
 このパッケージも、Unity の標準パッケージとして開発が続けられることになりました。
 
+---
+
+> Camera
+
 それでは、実際にこの Character Controller を自分のプロジェクトに組み込んでみたいと思います。
+
+---
+
+> Editor: Strawman
+
 過去の動画で使用した Strawman プロジェクトをベースにします。
+
 このキャラクターをキーボードで操作できるようにしてみましょう。
 
+---
+
+> Editor operation
+
 まずはパッケージを追加します。
-この Character Controller パッケージは、現時点でまだ experimental package のため、リストに表示されません。
+
+ただ、この Character Controller パッケージは、現時点でまだ experimental package のため、リストに表示されません。
+
+---
+
 “Add package by name” を使って、手動でインストールする必要があります。
+
 パッケージ名は “com.unity.charactercontroller” です。
 
+---
+
 パッケージをインストールしたら、次はサンプルアセットをインポートします。
+
 Package Manager の Samples タブからインポートできます。
 
+---
+
 このサンプルアセットには、”First Person” キャラクターと、”Third Person” キャラクターのサンプルが含まれています。
-通常は、これをベースとして独自の拡張を行っていくことになります。
 
-構成について少し整理しましょう。
+通常は、これらをベースとして独自のキャラクター・コントローラーを実装していくことになります。
+
+---
+
+> Figure: Package contents
+
+パッケージの構成について少し整理しましょう。
+
+---
+
 Character Controller パッケージには、キャラクター・コントローラーのためのベースシステムが実装されています。
-ですが、キャラクター・コントローラー本体の実装はありません。
-それは各プロジェクトで実装していくことになります。
-そのベースとなる基本的な実装が、サンプルアセットに含まれているということです。
 
-それでは、まず Third Person Character プレハブを配置しましょう。
-モデルを差し替えます。
+ですが、キャラクター・コントローラー本体の実装はありません。
+
+---
+
+それは各プロジェクトで実装していくことになります。
+
+このサンプルアセットには、その基本となる実装が含まれています。
+
+とりあえず試してみるには、このアセットが必要になるんですね。
+
+---
+
+それでは、まず Third Person Character プレファブを配置しましょう。
+
+モデルを Strawman に差し替えます。
+
 スケールが合っていないので調整します。
+
 Camera Target の位置も調整します。
 
-これを操作するための Third Person Player プレハブも配置します。
-Controlled Character に先ほどのキャラクターを指定します。
+---
+
+このキャラクターを操作するための Third Person Player プレファブも配置します。
+
+Controlled Character プロパティに先ほどのキャラクターを指定します。
+
+---
 
 これでとりあえず操作できるようになりました。
-W-A-S-D キーで操作できます。
-ただ、カメラの情報がうまく伝わっていないため、方向が逆になってしまっています。
+
+W-A-S-D キーで移動します。
+
+ただ、カメラの情報が伝わっていないため、移動方向がおかしいです。
+
+A キーで右に移動しちゃいます。
+
+---
 
 カメラの設定も行いましょう。
+
 Orbit Camera プレファブを配置します。
-この Orbit Camera から Main Camera を操作するために、Main Entity Camera Authoring コンポーネントを追加します。
-そして、Main Camera ゲームオブジェクトに Main Game Object Camera コンポーネントを追加します。
-最後に、Third Person Player の Controlled Camera に、先ほどの Orbit Camera を指定します。
+
+マウスで操作できる簡単なカメラシステムです。
+
+---
+
+Third Person Player の Controlled Camera に、この Orbit Camera を指定します。
+
+最後に、この Orbit Camera と Main Camera ゲームオブジェクトの動きを同期させます。
+
+---
+
+Orbit Camera に Main Entity Camera Authoring コンポーネントを追加します。
+
+Main Camera に Main Game Object Camera コンポーネントを追加します。
+
+---
+
+これらのコンポーネントはタグのようなものだと思ってください。
+
+あとは MainCameraSystem が同期を行ってくれます。
+
+---
 
 これで、プレイヤーとカメラの操作ができるようになりました。
+
+ただ、スケールを変えたので、このままではちょっと操作しにくいですね。
+
 Third Person Character や Orbit Camera には様々なプロパティが用意されています。
-スケールを変えたので、このままではちょっと操作しにくいですね。
+
+---
+
 速度に関する値を、全体的に少し小さめに変更してみます。
 
 こんな感じでどうでしょうか。
-それなりに操作しやすい状態になったと思います。
-Physics との干渉もちゃんと実現できています。
+
+かなり操作しやすくなったと思います。
+
+Physics との干渉もできていますね。
+
+---
+
+> Camera
 
 最後に、このキャラクター・コントローラーに簡単な拡張を行ってみましょう。
-ダブルジャンプをサポートしてみたいと思います。
 
-まず、ダブルジャンプを既に行ったかどうかを値として保持できるようにしましょう。
-ThirdPersonCharacterComponent.cs を開きます。
-ThirdPersonCharacterComponent struct に DoubleJumped と言う bool 値を追加しました。
-これはオーサリング時に必要の無い値なので、HideInInspector アトリビュートを付けています。
-これで Inspector 上では表示されない値となります。
+---
+
+ジャンプ中に１度だけ更にジャンプできるようにしたいと思います。
+
+いわゆるダブルジャンプですね。
+
+これにはまず、ダブルジャンプを既に行ったかどうかを値として保持する必要があります。
+
+---
+
+> Editor
+
+ThirdPersonCharacterComponent.cs を編集します。
+
+---
+
+> Code: ThirdPersonCharacterComponent
+
+ThirdPersonCharacterComponent と言う struct に、DoubleJumped と言う bool フィールドを追加しました。
+
+---
+
+なお、これはオーサリングする必要の無い値なので、HideInInspector アトリビュートを付けています。
+
+---
+
+> Editor
 
 次に、ThirdPersonCharacterAspect.cs を開きます。
+
+---
+
+> Text Editor
+
 キャラクターの挙動に関する処理は、ほとんどこの中に書かれています。
+
 “jump” で検索すると、ジャンプに関する処理を見つけられます。
+
+---
+
+> Code: Jump
+
 今は、IsGrounded が true の時だけ、つまり、地面に足が着いている時だけジャンプ操作を受け付けるようになっていますね。
 
-この処理をちょっと移動しちゃいましょう。
+---
+
+この処理を IsGrounded の判定よりも前に移動しちゃいましょう。
+
 そして、条件として DoubleJumped が false の場合を追加します。
+
 DoubleJumped の値を更新する処理も、ここに書いておきましょう。
 
-これで実行すると……２回ジャンプできるようになりました。
-このように、コードを追加することで機能を拡張していく、というのが基本的な使い方になります。
-この辺りの手順については、公式サンプルのチュートリアルが参考になります。
-まずはこれを一通りチェックしてみることをおすすめします。
+---
+
+> Editor
+
+これで実行すると…２回ジャンプできるようになりました。
+
+このように、サンプルコードをベースとして機能をカスタマイズしていくことができます。
+
+---
+
+このカスタマイズの手順については、公式サンプルのチュートリアルが参考になります。
+
+GitHub リポジトリの中にリンクがありますので、参考にしてください。
+
+---
+
+実は今回行ったダブルジャンプの拡張も、このチュートリアルの一部でした。
+
+興味が出てきたら、ぜひ続きにもチャレンジしてみてください。
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
