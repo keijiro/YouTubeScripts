@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>49 MSAA</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは 3D モデルフォーマット glTF です。
+
+---
+
+今回は、glTFast という、Unity で glTF 形式のアセットを扱うためのパッケージを紹介します。
+
+---
+
+> [glTF web page](https://www.khronos.org/gltf/)
+
+glTF というのは Khronos によって策定された 3D モデルのためのオープン規格です。
+
+---
+
+アプリケーション間で 3D モデルや 3D シーンをやり取りするための共通フォーマットとして使われることがあります。
+
+---
+
+Unity も glTF に対応して欲しいという要望は今までもあったのですが、glTFast というパッケージによってこれをサポートすることになりました。
+
+---
+
+> [glTFast web page](https://github.com/atteneder/glTFast)
+
+glTFast というのは、Andreas Atteneder さんによって開発された、Unity 用 glTF サポートパッケージです。
+
+---
+
+> [glTFast online manual](https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.0/manual/index.html)
+
+元々オープンソースソフトウェアとして開発されていたのですが、今後は Unity 公式パッケージとして正式にサポートされていくことになりました。
+
+---
+
+> Camera
+
+それでは早速、このパッケージを使ってみましょうか。
+
+---
+
+> Editor
+
+glTFast は、まだプレビュー段階のパッケージですので、Package Manager のリストには表示されません。
+
+“Install package by name” を使用します。
+
+---
+
+名前は “com.unity.cloud.gltfast” です。
+
+これでインポートされました。
+
+それでは、Editor 上での glTF ファイルのインポートを試してみましょう。
+
+---
+
+> [glTF sample assets](https://github.com/KhronosGroup/glTF-Sample-Assets)
+
+Khronos 公式のサンプルアセットリポジトリから、DamagedHelmet というモデルを試してみます。
+
+この GLB 形式のファイルをダウンロードしましょう。
+
+---
+
+> Editor
+
+ダウンロードしたら、Editor 上にドラッグ＆ドロップします。
+
+はい、インポートできましたね。
+
+---
+
+シーンに配置してみましょう。
+
+正常に表示されているようです。
+
+このように、メッシュはもちろんのこと、マテリアルやテクスチャもちゃんと同時にインポートできています。
+
+---
+
+ちなみに、今回使用した GLB ファイルというのは、glTF で定義されているバイナリフォーマットです。
+
+この他に、テキスト形式の gltf ファイルというのも存在しますが、これももちろん利用可能です。
+
+---
+
+その場合、jpg ファイルや bin ファイルなど、各種データが外部ファイルとして分離されます。
+
+これらのファイルも同時にインポートする必要があるので注意してください。
+
+---
+
+> [glTFast feature set](https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.0/manual/features.html)
+
+glTFast では、glTF 2.0 の標準仕様以外にも、各種の拡張に対応しています。
+
+主要な所では、KTX テクスチャ圧縮や Draco メッシュ圧縮に対応しています。
+
+---
+
+> [KTX for Unity](https://docs.unity3d.com/Packages/com.unity.cloud.ktx@3.2/manual/index.html)
+
+KTX を扱うには、この KTX for Unity というパッケージを追加でインストールする必要があります。
+
+---
+
+> [DracoUnity](https://github.com/atteneder/DracoUnity)
+
+また、Draco を扱うには、この DracoUnity というパッケージを追加でインストールする必要があります。
+
+---
+
+この DracoUnity については、まだ Unity 公式パッケージとなっていないのですが、いずれ公式サポートになる予定です。
+
+---
+
+> Camera
+
+個人的には Draco に対応しているのはとても有り難いですね。
+
+Draco は 3D モデルのジオメトリ情報に対して不可逆圧縮を適用します。
+
+---
+
+> [Draco web page](https://google.github.io/draco/)
+
+モデルの複雑度と圧縮品質によりますが、データサイズを 1/10 程度にすることが可能です。
+
+---
+
+僕は GitHub でプロジェクトを管理することが多いので、リポジトリに格納されるファイルサイズを減らせるというのは、かなり嬉しかったりします。
+
+---
+
+> Camera
+
+さて、ここまではアセットインポートの形式として glTF を使用する場合について解説してきました。
+
+ただ、glTFast には、これ以外の使い方も色々と用意されています。
+
+---
+
+> Table
+
+今解説したのは、Editor 上でインポートする場合です。
+
+glTFast はこの他にも、glTF ファイルのエクスポートもサポートしています。
+
+---
+
+また、Editor 上だけでなく、ランタイムにおいても、同様にインポート／エクスポートをサポートしています。
+
+これらの使い方をそれぞれ簡単に試してみましょう。
+
+---
+
+> Editor
+
+まず、Editor 上からエクスポートしてみます。
+
+右クリックメニューの中に “Export glTF” という項目があります。
+
+---
+
+はい、これでエクスポートできました。
+
+簡単ですね。
+
+---
+
+また、このエクスポート機能は、シーンのヒエラルキーに対しても行えます。
+
+サンプルとして、箱を積み上げるシミュレーションを作ってみました。
+
+一時停止して、右クリックメニューから “Export glTF” を実行します。
+
+---
+
+> Blender
+
+出力されたファイルを Blender でインポートしてみます。
+
+はい、ちゃんとヒエラルキーが再現されていますね。
+
+---
+
+テクスチャやマテリアルも再現されています。
+
+---
+
+> Editor
+
+次に、ランタイム上で glTF をインポートするサンプルを作ってみました。
+
+ファイルの参照先は URL で指定します。
+
+---
+
+ローカルファイルのロードには “file” スキームを使います。
+
+もちろん、”https” スキームを使って、サーバー上のファイルを参照することもできます。
+
+---
+
+ここでは GitHub 上の glTF サンプルファイルを直接参照してみます。
+
+はい、ロードできましたね。
+
+---
+
+> Code
+
+ソースコードも至極簡単です。
+
+実際には、非同期処理やエラー処理を実装する必要があるので、もうちょっと複雑になりますが、基本はこんな感じです。
+
+---
+
+> Editor
+
+最後に、ランタイムからのエクスポートを試してみましょう。
+
+---
+
+先ほどの、箱を積み上げるシミュレーションに Export ボタンを追加してみました。
+
+これを押すと、GLB ファイルとして出力されます。
+
+---
+
+> Blender
+
+Blender で読み込むと…先程と同様にシーンが出力されていますね。
+
+---
+
+> Code
+
+ソースコードはこんな感じで、エクスポートするヒエラルキーを GameObject の配列として渡すだけです。
+
+---
+
+> Camera
+
+こんな感じで、glTFast では、ランタイム上でのインポートやエクスポートも柔軟に行うことができます。
+
+この機能を使えば、色々と面白いことが実現できそうな気がしますね。
+
+---
+
+アプリ上でモデリングを行って、それを glTF ファイルとしてエクスポートする。
+
+あるいは、追加コンテンツを glTF ファイルで配布して、動的にインポートする。
+
+---
+
+……とか、色んなことができる気がします。
+
+---
+
+> [glTFast feature set](https://docs.unity3d.com/Packages/com.unity.cloud.gltfast@6.0/manual/features.html)
+
+ただ、現状の glTFast は、glTF の仕様を全て完全にサポートしているわけではありません。
+
+---
+
+マニュアルに対応表が掲載されていますが、サポートできていない機能もあります。
+
+万能の解決策ではない、ということは、予め理解しておく必要があると思います。
+
+---
+
+> Camera
+
+こんな感じで今回は glTFast について解説してきましたが、いかがでしたでしょうか？
+
+---
+
+Unity では glTF 以外にも Universal Scene Description、いわゆる USD 形式への対応も進められています。
+
+これらのオープン規格への対応が進むことによって、他のアプリケーションとの連携が取りやすくなっていくはずです。
+
+---
+
+USD 形式については、また別の機会に触れたいと思っていますが、注目度の高い機能なので、既に試している方もいるかもしれませんね。
+
+この glTF についても、USD についても、開発チーム側では常にフィードバックを募集しています。
+
+---
+
+試したという方は、フォーラムやコメント欄、SNS などで感想を共有していただければと思います。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
