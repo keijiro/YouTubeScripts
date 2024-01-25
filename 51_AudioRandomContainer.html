@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>49 MSAA</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+みなさんこんにちは。
+
+今回のトピックは Audio Random Container です。
+
+---
+
+今回紹介する Audio Random Container は、Unity 2023.2 で追加された新機能で、効果音をランダムに鳴らすというものです。
+
+何回も鳴らす効果音にランダムな変化を与えることで、繰り返しを目立たなくすることができます。
+
+---
+
+> Editor Demo
+
+実際に使っている所を確認した方が分かりやすいと思うので、まずはデモを見てみましょう。
+
+---
+
+これはホラーゲームを意識して作ったサンプルです。
+
+スペースキーを押すと、前に進むことができます。
+
+---
+
+ちょっと音を注意深く聴いてみてください。
+
+今は、普通に足音を繰り返し再生していますね。
+
+バックグラウンドで鳴っている水滴の音も、単純な繰り返しです。
+
+---
+
+これを Audio Random Container でランダム化すると、こんな感じになります。
+
+どうでしょうか？
+
+かなり自然な感じになったと思います。
+
+---
+
+> Editor Settings
+
+Audio Random Container の設定をちょっと覗いてみましょう。
+
+このように、複数のオーディオクリップを登録して、ランダムに選んで再生します。
+
+---
+
+また、音量をランダムに変化させたり、音程をランダムに変化させたり、というような設定がなされています。
+
+繰り返しの間隔もランダムにしていますね。
+
+---
+
+こちらは水滴の効果音の設定です。
+
+こちらでは単一のオーディオクリップのみ使用しています。
+
+音量、音程、時間の各要素をランダムにすることで、繰り返しを目立たなくしている、という感じですね。
+
+---
+
+> Camera
+
+それでは Audio Random Container の基本的な使い方を見ていきましょう。
+
+---
+
+> Editor Authoring
+
+Unity 2023.2 で Asset の Create メニューの Audio を選ぶと、その中に Audio Random Container が存在します。
+
+---
+
+作成した Audio Random Container を選択して、この Edit ボタンを押すと、 Audio Random Container ウィンドウが表示されます。
+
+まずはこのコンテナにオーディオクリップを登録しましょう。
+
+---
+
+Audio Clips にある “+” ボタンを押して、オーディオクリップを登録していきます。
+
+これで再生ボタンを押すと…順番に再生されましたね。
+
+---
+
+今は Playback Mode が “Sequential” になっているので、設定された順序で再生されています。
+
+これを “Random” に変更すると…ランダムな順序になりましたね。
+
+---
+
+音量をランダムに変化させるには、この Volume スライダーの横にあるサイコロボタンを押します。
+
+すると、この下のスライダーで、ランダムな変化の幅を設定できるようになります。
+
+---
+
+音程についても、同じ要領で設定できます。
+
+これで、音量と音程がランダム化されました。
+
+---
+
+自動再生される音の場合は、再生間隔も調整できます。
+
+再生間隔の設定には Pulse と Offset の２方式が存在します。
+
+---
+
+> Table
+
+Pulse の場合は、各オーディオクリップの再生開始のタイミングを基準に設定を行います。
+
+Offset の場合は、再生終了から次の再生開始までの間隔を設定します。
+
+---
+
+> Editor Inspector
+
+こうして作成した Audio Random Container は、通常の Audio Clip と同様に、Audio Source で扱うことができます。
+
+---
+
+Audio Source コンポーネントに Audio Resource というプロパティがあります。
+
+ここは、以前は Audio Clip という名前のプロパティで、名前の通り Audio Clip しか設定することができませんでした。
+
+---
+
+今は、この Audio Resource プロパティに、Audio Clip と Audio Random Container のどちらも設定できるようになっています。
+
+---
+
+Audio Clip を設定すれば、以前のように単純に Audio Clip を鳴らすことができますし、Audio Random Container を設定すれば、ランダム化された音が鳴るわけです。
+
+---
+
+つまり、今ままでと大きく使い勝手を変えることなく、このランダム化の機能を使うことができるというわけですね。
+
+---
+
+> Camera
+
+こんな感じで今回は Audio Random Container について解説してきましたが、いかがでしたでしょうか？
+
+---
+
+この Audio Random Container は、とてもシンプルな機能なので、自分でスクリプトを書けるという人なら、そこまで重要性を感じないかもしれませんね。
+
+---
+
+ただ、ゲームに効果音を組み込む時に、便利な機能であることには間違いないと思います。
+
+プロトタイピングやゲームジャムなんかでも、こういった機能が咄嗟に使えるととても便利な気がしますね。
+
+---
+
+Unity の Tech Stream を入れている場合は、既にこの機能が使えるようになっているはずですので、ぜひ活用してみてください。
+
+---
+
+今回の動画が参考になったという方は高評価やコメントを頂けると有難いです。
+
+それではまた次回の動画でお会いしましょう。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
