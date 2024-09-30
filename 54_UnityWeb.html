@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>54 Unity Web</title>
+    <meta charset="utf-8">
+    <style>
+      .remark-slide-content {
+        color: white;
+        background-color: black;
+        font-size: 50pt;
+        padding: 0px 0.5em;
+      }
+      .remark-code-line { font-size: 25pt; margin: 0.2em 0px; }
+      p { margin: 0.5em 0px; line-height: 120%; }
+      code { margin: 0px 2em; }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+
+> Camera
+
+今回は Unity 6 における Web プラットフォームの対応状況について解説します。
+
+まず本題へ入る前に、名前の変更について触れておきます。
+
+---
+
+> Editor: 2022 Build Settings
+
+今まで Unity では、Web プラットフォームのことを、WebGL と呼んでいました。
+
+アイコンには HTML5 と書いてありますね。
+
+---
+
+ちょっと色々混乱する要素があります。
+
+今後 WebGPU などの新しい要素が追加されると、さらに混乱しそうです。
+
+---
+
+> Editor: 6000 Build Settings
+
+そこで Unity 6 からは、これを単に “Web” と呼んでいくことになりました。
+
+---
+
+この動画でも、これ以降は ”Unity Web” や “Web Target” のような呼び方をしていきます。
+
+---
+
+> Camera
+
+それでは Unity 6 における Unity Web の変更点について触れていきましょう。
+
+まず大きなトピックは、モバイルブラウザへの対応です。
+
+---
+
+> iPhone Mirrorring: Old Build
+
+これまでの Unity Web ではモバイルブラウザを正式にサポートしていませんでした。
+
+---
+
+モバイルブラウザで起動すると、このように警告ダイアログが表示されていました。
+
+---
+
+> iPhone Mirroring: New Build
+
+ここに変更が加えられて、Unity 6 からはモバイルブラウザを正式対応しています。
+
+もう警告ダイアログも表示されません。
+
+---
+
+> B-Roll: Pixel
+
+もちろん、依然として、古いデバイスでは動作が難しいこともあるでしょう。
+
+---
+
+一応、必要スペックとしては、 iOS では Safari 15 以降、Android では Chrome 58 以降、と決められています。
+
+大雑把に言って、５年前ぐらいまでの機種なら対応できそう……という感じだと思います。
+
+---
+
+> Camera
+
+２つ目の大きなトピックは、 WebGPU への対応です。
+
+---
+
+> Editor: Project Settings
+
+Unity 6 では従来の WebGL バックエンドに加えて、WebGPU バックエンドが選択できるようになりました。
+
+---
+
+> B-Roll: VFX Graph
+
+まだ Experimental Release の段階ですが、既にかなり本格的に使える状態になっています。
+
+---
+
+この WebGPU を使用することによって、Compute Shader を始めとする高度な GPU 機能へのアクセスが可能になります。
+
+---
+
+> Camera
+
+具体的に WebGPU によってできるようになったことをいくつか挙げてみましょう。
+
+---
+
+> Browser: Marching Cube
+
+まず Compute Shader の使用が可能になります。
+
+これによって GPU リソースをグラフィックス以外の用途に使うことが可能になりますね。
+
+---
+
+> Browser: GPU Skinning
+
+これに関連して、VFX Graph や GPU Skinning のような、Unity 上の GPU 機能も利用可能になります。
+
+---
+
+> Browser: VFX Graph
+
+特に VFX Graph については前の動画でも触れましたが、高度なビジュアルエフェクトを Web 上でも使うことが可能になるわけです。
+
+---
+
+> Browser: URP Manual
+
+次に挙げられるのは、既存のレンダーパイプラインの対応範囲が広げられることです。
+
+WebGL では URP の機能を全て使えるわけではありませんでした。
+
+---
+
+> Browser: URP Test
+
+例えば Deferred Renderer や、SSAO のような高度な機能は、WebGL と互換性がありませんでした。
+
+これが WebGPU なら使用可能になります。
+
+---
+
+なお、WebGPU を使用するにはブラウザが WebGPU に対応している必要があります。
+
+今のところ Chrome や Edge は正式対応しています。
+
+モバイルの Chrome でも動作条件を満たせば問題無く動きます。
+
+Safari では、まだデフォルトでは有効化されていないものの、オプションをオンにすることで動作が可能です。
+
+具体的には、System Settings の Feature Flags の中にある WebGPU をオンにする必要があります。
+
+これで iOS 18 や macOS Sequoia では動作が可能になります。
+
+残念ながら iOS 17 や macOS Sonoma では、WebGPU をオンにしても動作しません。
+
+最新版の OS から動作が可能になっている、と理解してください。
+
+この WebGPU は是非とも試してもらいたい機能ですが、現状はまだ Experimental Release のため、機能を有効化するオプションは隠されています。
+
+ProjectSettings ディレクトリの中にある ProjectSettings.asset ファイルをテキストエディタで開いて webGLEnableWebGPU を 1 に変更する必要があります。
+
+これで Project Settings の Graphics API で WebGPU が選択できるようになります。
+
+この作業は、この動画を作成している時点では必須となっていますが、いずれ Unity 6 のアップデート内で不要になる予定です。
+
+
+
+
+このように様々なことが可能になった Unity Web ですが、現状できないこともいくつか存在します。
+
+その中でも特に注意するべき点をいくつか挙げておきたいと思います。
+
+まず一つ目は、HDRP を使用できないことです。
+
+WebGPU は様々なグラフィックス機能が利用可能になりましたが、その WebGPU でさえ、残念ながら HDRP の必要なスペックを満たしていません。
+
+将来的に解決される可能性もありますが、当面の間は使えないと考えるべきでしょう。
+
+２つ目は C# スレッドが使えないという点です。
+
+これは Unity Web に古くから存在し続ける制約の一つであり、現在も解決はできていません。
+
+実際には、ブラウザ上でマルチスレッドを使うことは不可能ではなく、Unity でも Unity エンジン内部の C++ コードについてはマルチスレッド対応が実現されています。
+
+ただ、C# スクリプト上では、ガベッジコレクションとマルチスレッディングを両立させる必要があり、これが技術的に難しいことから、今に至るまで解決はされていません。
+
+これについても、まだ当面の間は解決されないと考えるべきでしょう。
+
+マルチスレッドは使用できませんが、コルーチンや Awaitable クラスを使った非同期処理は可能なので、なるべくそちらを活用していくということになります。
+
+
+
+さて、最後に、各種の人気の Web サイトに Unity Web コンテンツをアップロードする際のコツについて触れておきたいと思います。
+
+今回この動画を作成するにあたって、次の４つのホスティングサービスを試してみました。
+
+GitHub Pages, itich.io, Unity Play, Unity Room の４つです。
+
+まず、一般的なコツになりますが、最終的なビルドのサイズを減らすために、なるべくサイズが小さくなるオプションを選ぶことになります。
+
+ファイルサイズに大きく影響を与えるのは Build ウィンドウにある Build Optimization オプションですね。
+
+ここでは Smaller Size with LTO を選択することでサイズを最小化できます。
+
+ただし、ビルド時間はかなり延びるので注意してください。
+
+開発中は Faster などを選択することでビルド時間を短縮し、デプロイ時に Smaller へ切り替える、などの調整が必要になると思います。
+
+次に考慮すべきは Player Settings の Compression Method です。
+
+通常ここは Gzip 形式を選択しますが、ここで Brotli を選択することで数％減らすことができます。
+
+ただし、Brotoli 形式を選択するには Web サーバー側で Brotoli に対応している必要があります。
+
+対応していない場合は、この Decompression Fallback をオンにしてください。
+
+Brotli デコンプレッサを内蔵することにより、この制約を回避できます。
+
+>>>> Stripping など
+
+これらの基本的な設定を行った上で、各種の Web サイトにアップロードしてみました。
+
+まず GitHub Pages ですが、 Brotoli 圧縮に対応していないため、 Decompression Fallback をオンにしておく必要がありました。
+
+それ以外は全く問題無いです。
+
+次に itich.io ですが、こちらは何も特別な設定を行う必要はありませんでした。
+
+WebGPU ビルドも、WebGL と同様に動作させることが可能です。
+
+次に Unity Play です。
+
+これはご存じ無い方も多いかもしれませんが、Unity 社で運営しているサービスです。
+
+このサイトは一番利用が楽で、Unity 標準の WebGL Publisher パッケージをインストールして、Publish を選ぶたけで公開まで全自動で行ってくれます。
+
+とりあえずグローバルに参照できる場所にコンテンツを公開したい、と思ったならば、これを使うのが最も手軽で良いでしょう。
+
+最後に、日本で人気のある Unity Room です。
+
+Unity Room ではファイル拡張子が固定になっている都合上、Compression Format は Gzip を選ぶ必要があります。
+
+Decompression Fallback もオフにしてください。
+
+その他の設定は同じで大丈夫です。
+
+もちろん、WebGPU を使ったビルドも公開できます。
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        highlightStyle: 'sunburst',
+        slideNumberFormat: ''
+      });
+    </script>
+  </body>
+</html>
