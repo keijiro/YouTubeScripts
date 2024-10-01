@@ -30,11 +30,11 @@
 
 今まで Unity では、Web プラットフォームのことを、WebGL と呼んでいました。
 
-アイコンには HTML5 と書いてありますね。
+アイコンには HTML5 と書いてあります。
 
 ---
 
-ちょっと色々混乱する要素があります。
+ちょっと色々混乱する要素がありますね。
 
 今後 WebGPU などの新しい要素が追加されると、さらに混乱しそうです。
 
@@ -70,7 +70,7 @@
 
 > iPhone Mirroring: New Build
 
-ここに変更が加えられて、Unity 6 からはモバイルブラウザを正式対応しています。
+ここに変更が加えられて、Unity 6 からはモバイルブラウザを正式対応します。
 
 もう警告ダイアログも表示されません。
 
@@ -82,21 +82,27 @@
 
 ---
 
+> Overlay: Requirements
+
 一応、必要スペックとしては、 iOS では Safari 15 以降、Android では Chrome 58 以降、と決められています。
 
-大雑把に言って、５年前ぐらいまでの機種なら対応できそう……という感じだと思います。
+---
+
+大雑把に言って、５年前ぐらいまでの機種なら対応できそう……という感じでしょうか。
 
 ---
 
 > Camera
 
-２つ目の大きなトピックは、 WebGPU への対応です。
+２つ目の大きなトピックは、WebGPU への対応です。
 
 ---
 
 > Editor: Project Settings
 
-Unity 6 では従来の WebGL バックエンドに加えて、WebGPU バックエンドが選択できるようになりました。
+Unity 6 では従来の WebGL バックエンドに加えて、WebGPU バックエンドが使用可能になりました。
+
+Graphics APIs で選択できます。
 
 ---
 
@@ -112,7 +118,7 @@ Unity 6 では従来の WebGL バックエンドに加えて、WebGPU バック�
 
 > Camera
 
-具体的に WebGPU によってできるようになったことをいくつか挙げてみましょう。
+具体的に WebGPU によって可能になることをいくつか挙げてみましょう。
 
 ---
 
@@ -132,132 +138,317 @@ Unity 6 では従来の WebGL バックエンドに加えて、WebGPU バック�
 
 > Browser: VFX Graph
 
-特に VFX Graph については前の動画でも触れましたが、高度なビジュアルエフェクトを Web 上でも使うことが可能になるわけです。
+特に VFX Graph については前の動画でも触れましたが、高度なビジュアルエフェクトを Web 上でも使うことが可能になったわけですね。
 
 ---
 
 > Browser: URP Manual
 
-次に挙げられるのは、既存のレンダーパイプラインの対応範囲が広げられることです。
-
-WebGL では URP の機能を全て使えるわけではありませんでした。
+また、URP の高度な機能も利用可能になります。
 
 ---
 
-> Browser: URP Test
+> Browser: URPTestbed3
 
-例えば Deferred Renderer や、SSAO のような高度な機能は、WebGL と互換性がありませんでした。
-
-これが WebGPU なら使用可能になります。
+例えば WebGL では URP の Deferred Renderer を使うことができませんでしたが、WebGPU では利用可能になっています。
 
 ---
+
+もちろん、Forward+ Renderer も利用可能です。
+
+---
+
+> Browser: caniuse.com
 
 なお、WebGPU を使用するにはブラウザが WebGPU に対応している必要があります。
 
 今のところ Chrome や Edge は正式対応しています。
 
-モバイルの Chrome でも動作条件を満たせば問題無く動きます。
+---
 
-Safari では、まだデフォルトでは有効化されていないものの、オプションをオンにすることで動作が可能です。
+> B-Roll: Mobile Browser
 
-具体的には、System Settings の Feature Flags の中にある WebGPU をオンにする必要があります。
+モバイルの Chrome でも動作条件を満たせば問題無く動くのが素晴らしいですね。
+
+---
+
+> Browser: caniuse.com
+
+Safari では、まだデフォルトでは有効化されていないものの、オプションをオンにすることで使用が可能です。
+
+---
+
+> iPhone Mirroring: Enable Flag
+
+具体的には、System Settings の Safari の Feature Flags の中にある WebGPU をオンにする必要があります。
+
+---
+
+> B-Roll: iPhone Safari
 
 これで iOS 18 や macOS Sequoia では動作が可能になります。
 
-残念ながら iOS 17 や macOS Sonoma では、WebGPU をオンにしても動作しません。
+残念ながら iOS 17 や macOS Sonoma では互換性の問題があって動作しません。
 
-最新版の OS から動作が可能になっている、と理解してください。
+---
+
+最新版の OS から動作が可能になっている、という感じですね。
+
+---
+
+> Camera
 
 この WebGPU は是非とも試してもらいたい機能ですが、現状はまだ Experimental Release のため、機能を有効化するオプションは隠されています。
 
-ProjectSettings ディレクトリの中にある ProjectSettings.asset ファイルをテキストエディタで開いて webGLEnableWebGPU を 1 に変更する必要があります。
+---
 
-これで Project Settings の Graphics API で WebGPU が選択できるようになります。
+> Text Editor
 
-この作業は、この動画を作成している時点では必須となっていますが、いずれ Unity 6 のアップデート内で不要になる予定です。
+ProjectSettings ディレクトリの中にある ProjectSettings.asset ファイルをテキストエディタで開いて "webGLEnableWebGPU" を "1" に変更する必要があります。
 
+---
 
+> Editor: Project Settings
 
+これで Project Settings の Graphics APIs で WebGPU が選択できるようになります。
 
-このように様々なことが可能になった Unity Web ですが、現状できないこともいくつか存在します。
+---
 
-その中でも特に注意するべき点をいくつか挙げておきたいと思います。
+この一連の作業は、この動画を作成している時点では必須となっていますが、いずれ Unity 6 のアップデート内で不要になる予定です。
+
+---
+
+> Camera
+
+このように様々なことが可能になった Unity Web ですが、現状できないことも存在します。
+
+その中でも特に注意すべき点をいくつか挙げておきたいと思います。
+
+---
+
+> HDRP sample
 
 まず一つ目は、HDRP を使用できないことです。
 
-WebGPU は様々なグラフィックス機能が利用可能になりましたが、その WebGPU でさえ、残念ながら HDRP の必要なスペックを満たしていません。
+---
+
+WebGPU では様々なグラフィックス機能が利用可能になりましたが、その WebGPU でさえ、残念ながら HDRP の必要スペックを完全には満たしていません。
+
+---
 
 将来的に解決される可能性もありますが、当面の間は使えないと考えるべきでしょう。
 
+---
+
+> B-Roll: .NET Manual
+
 ２つ目は C# スレッドが使えないという点です。
 
-これは Unity Web に古くから存在し続ける制約の一つであり、現在も解決はできていません。
+これは Unity Web に古くから存在している制約の一つで、現在も解決できていません。
+
+---
+
+> Browser: Unity Web Manual
 
 実際には、ブラウザ上でマルチスレッドを使うことは不可能ではなく、Unity でも Unity エンジン内部の C++ コードについてはマルチスレッド対応が実現されています。
 
-ただ、C# スクリプト上では、ガベッジコレクションとマルチスレッディングを両立させる必要があり、これが技術的に難しいことから、今に至るまで解決はされていません。
+---
 
-これについても、まだ当面の間は解決されないと考えるべきでしょう。
+> [Discussions Thread](https://discussions.unity.com/t/webgl-threading-roadmap/910051/3)
+
+ただ、C# スクリプト上では、ガベッジコレクションとマルチスレッディングの両立が技術的に難しいことから、今に至るまで解決されていません。
+
+---
+
+これについても、まだ当面の間は使えないと考えるべきでしょう。
+
+---
+
+> B-Roll: Awaitable Reference
 
 マルチスレッドは使用できませんが、コルーチンや Awaitable クラスを使った非同期処理は可能なので、なるべくそちらを活用していくということになります。
 
+---
 
+> Camera
 
-さて、最後に、各種の人気の Web サイトに Unity Web コンテンツをアップロードする際のコツについて触れておきたいと思います。
+さて最後に、各種の人気の Web サイトに Unity 6 でビルドしたコンテンツをアップロードする際のコツについて触れておきたいと思います。
+
+---
+
+> Split Screen
 
 今回この動画を作成するにあたって、次の４つのホスティングサービスを試してみました。
 
-GitHub Pages, itich.io, Unity Play, Unity Room の４つです。
+GitHub Pages, itch.io, Unity Play, Unity Room の４つです。
 
-まず、一般的なコツになりますが、最終的なビルドのサイズを減らすために、なるべくサイズが小さくなるオプションを選ぶことになります。
+---
 
-ファイルサイズに大きく影響を与えるのは Build ウィンドウにある Build Optimization オプションですね。
+> Editor: Build Settings
 
-ここでは Smaller Size with LTO を選択することでサイズを最小化できます。
+まず、一般的なコツになりますが、最終的なビルドのサイズを減らすために、なるべくサイズが小さくなるオプションを適用することをお勧めします。
+
+---
+
+まず最初に確認したいのは、Platform Settings にある Code Optimization オプションですね。
+
+ここでは "Disk Size with LTO" を選択することでサイズを最小化できます。
+
+---
 
 ただし、ビルド時間はかなり延びるので注意してください。
 
-開発中は Faster などを選択することでビルド時間を短縮し、デプロイ時に Smaller へ切り替える、などの調整が必要になると思います。
+開発中は "Shorter Build Time" を選択しつつ、デプロイ時は元に戻す、などの工夫が必要になると思います。
 
-次に考慮すべきは Player Settings の Compression Method です。
+---
 
-通常ここは Gzip 形式を選択しますが、ここで Brotli を選択することで数％減らすことができます。
+> Editor: Publishing Settings
 
-ただし、Brotoli 形式を選択するには Web サーバー側で Brotoli に対応している必要があります。
+次に考慮すべきは Publishing Settings の Compression Method です。
+
+---
+
+デフォルトでは Gzip が選択されていますが、ここで Brotli を選択することで、圧縮率を高めることができます。
+
+---
+
+ただし、Brotli 圧縮を使用するには Web サーバーが Brotli に対応している必要があります。
 
 対応していない場合は、この Decompression Fallback をオンにしてください。
 
-Brotli デコンプレッサを内蔵することにより、この制約を回避できます。
+---
 
->>>> Stripping など
+Brotli の展開コードを Loader に内蔵することで、この制約を回避きます。
+
+---
+
+> Editor: Project Settings
+
+あとは、コード最適化周りで細々としたオプションが Project Settings 内にあります。
+
+---
+
+"Managed Stripping Level" を "High" にして、"IL2CPP Code Generation" を "Faster (smaller) builds" にすると効果があるかもしれません。
+
+---
+
+また、Publishing Settings 内にある "Target WebAssembly 2023" をオンにするのも良いかもしれません。
+
+これをオンにすると、ブラウザの必要スペックが上がりますが、コードサイズの削減と高速化が若干期待できます。
+
+---
+
+> Spreadsheet
+
+小規模なサンプルプロジェクトで、これらのオプションの効果を測定してみました。
+
+---
+
+一番左がデフォルトの状態で、右に行くに従ってオプションを有効化しています。
+
+最初は 15MB あったのが、最終的に 9MB まで減っていますから、かなりの効果がありますね。
+
+---
+
+なかでも一番効果があったのは Brotli 圧縮の適用でした。
+
+Decompression Fallback をオンにした影響で Loader のサイズが若干増加していますが、トータルではかなり減っています。
+
+---
+
+他のオプションは、コードの量をいかに減らすかという機能であるのに対して、このオプションはデータ全体に影響を及ぼします。
+
+---
+
+大規模なプロジェクトになるほど効果は高くなるものと予想できます。
+
+できる限り Brotli 圧縮は適用すべきと考えられますね。
+
+---
+
+> Camera
 
 これらの基本的な設定を行った上で、各種の Web サイトにアップロードしてみました。
 
-まず GitHub Pages ですが、 Brotoli 圧縮に対応していないため、 Decompression Fallback をオンにしておく必要がありました。
+---
+
+> Browser: GitHub Pages
+
+まず GitHub Pages ですが、 Brotli 圧縮に対応していないため、 Decompression Fallback が必須でした。
 
 それ以外は全く問題無いです。
 
-次に itich.io ですが、こちらは何も特別な設定を行う必要はありませんでした。
+---
 
-WebGPU ビルドも、WebGL と同様に動作させることが可能です。
+> Browser: itch.io
+
+次に itch.io ですが、こちらは特に設定を調整する必要はありませんでした。
+
+zip ファイルに圧縮してアップロードするだけですね。
+
+---
+
+> Browser: Unity Play
 
 次に Unity Play です。
 
 これはご存じ無い方も多いかもしれませんが、Unity 社で運営しているサービスです。
 
-このサイトは一番利用が楽で、Unity 標準の WebGL Publisher パッケージをインストールして、Publish を選ぶたけで公開まで全自動で行ってくれます。
+---
 
-とりあえずグローバルに参照できる場所にコンテンツを公開したい、と思ったならば、これを使うのが最も手軽で良いでしょう。
+> Editor: Package Manager
+
+このサイトは一番利用が楽で、Unity 標準の WebGL Publisher パッケージによって自動化されています。
+
+---
+
+> Editor: Publishing Window
+
+"Build and Publish" ボタンを押すだけで公開まで全自動で行ってくれます。
+
+特に調整すべき点などもありませんでした。
+
+---
+
+とりあえずウェブ上にプロジェクトを公開したい、という場合には、これが最も手軽かもしれません。
+
+---
+
+> Browser: Unity Room
 
 最後に、日本で人気のある Unity Room です。
 
-Unity Room ではファイル拡張子が固定になっている都合上、Compression Format は Gzip を選ぶ必要があります。
+---
+
+> Browser: Uploading Screen
+
+Unity Room ではファイル構成が予め決められている都合上、Brotli 圧縮を使うことができません。
+
+---
+
+Compression Format は Gzip を選ぶ必要があります。
 
 Decompression Fallback もオフにしてください。
 
-その他の設定は同じで大丈夫です。
+---
 
-もちろん、WebGPU を使ったビルドも公開できます。
+> Browser: Unity Room Sample
+
+その他の設定は弄らなくても大丈夫です。
+
+---
+
+> Split Screen
+
+このように、どのサービスも、それほど大きな違いは無く利用可能です。
+
+Compression 関係のオプションで若干の調整が必要になる程度ですね。
+
+---
+
+WebGPU を利用したビルドも、全てのサービスで問題無く起動することができました。
+
+ぜひ Unity 6 の新機能を活用して、新たな Web コンテンツを開発してみてください。
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
