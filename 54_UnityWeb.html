@@ -284,19 +284,23 @@ GitHub Pages, itch.io, Unity Play, Unity Room の４つです。
 
 ---
 
-> Editor: Build Settings
+> Camera
 
 まず、一般的なコツになりますが、Web ページのロード時間を減らすために、なるべくビルドのサイズが小さくなるよう、設定を調整していくことをお勧めします。
 
 ---
 
-最初に確認したいのは、Platform Settings にある Code Optimization オプションですね。
+> Editor: Build Settings
 
-ここでは "Disk Size with LTO" を選択することでサイズを最小化できます。
+最初に確認したいのは、Platform Settings にある Code Optimization オプションですね。
 
 ---
 
+ここでは "Disk Size with LTO" を選択することでサイズを最小化できます。
+
 ただし、ビルド時間はかなり延びるので注意してください。
+
+---
 
 開発中は "Shorter Build Time" を選択しつつ、デプロイ時は元に戻す、などの工夫が必要になると思います。
 
